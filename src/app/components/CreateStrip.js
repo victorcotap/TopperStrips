@@ -1,30 +1,24 @@
 'use client';
 
 import { useState } from 'react';
+import { createEmptyFlightStrip, validateFlightStrip, ATC_POSITIONS } from '@/models/FlightStrip';
 
 export default function CreateStrip({ onCreateStrip }) {
-  const [formData, setFormData] = useState({
-    planeType: '',
-    missionType: '',
-    origin: '',
-    destination: '',
-    altitude: '',
-    column: 'ground' // default column
-  });
+  const [formData, setFormData] = useState(createEmptyFlightStrip());
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    const validation = validateFlightStrip(formData);
+    if (!validation.isValid) {
+      alert(validation.errors.join('\n'));
+      return;
+    }
+
     try {
       await onCreateStrip(formData);
       // Reset form only if creation was successful
-      setFormData({
-        planeType: '',
-        missionType: '',
-        origin: '',
-        destination: '',
-        altitude: '',
-        column: 'ground'
-      });
+      setFormData(createEmptyFlightStrip());
     } catch (error) {
       console.error('Error creating strip:', error);
       alert('Failed to create strip: ' + (error.details || error.message || 'Unknown error'));
@@ -32,9 +26,10 @@ export default function CreateStrip({ onCreateStrip }) {
   };
 
   const handleChange = (e) => {
+    const value = e.target.type === 'number' ? Number(e.target.value) : e.target.value;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: value
     });
   };
 
@@ -43,11 +38,34 @@ export default function CreateStrip({ onCreateStrip }) {
       <div className="form-group">
         <input
           type="text"
-          name="planeType"
-          value={formData.planeType}
+          name="callsign"
+          value={formData.callsign}
           onChange={handleChange}
-          placeholder="Plane Type"
+          placeholder="Callsign"
           className="form-input"
+          required
+        />
+      </div>
+      <div className="form-group">
+        <input
+          type="text"
+          name="aircraftType"
+          value={formData.aircraftType}
+          onChange={handleChange}
+          placeholder="Aircraft Type"
+          className="form-input"
+          required
+        />
+      </div>
+      <div className="form-group">
+        <input
+          type="number"
+          name="numberOfAircrafts"
+          value={formData.numberOfAircrafts}
+          onChange={handleChange}
+          placeholder="Number of Aircrafts"
+          className="form-input"
+          min="1"
           required
         />
       </div>
@@ -90,7 +108,7 @@ export default function CreateStrip({ onCreateStrip }) {
           name="altitude"
           value={formData.altitude}
           onChange={handleChange}
-          placeholder="Altitude"
+          placeholder="Altitude (ft)"
           className="form-input"
           required
         />
@@ -103,9 +121,11 @@ export default function CreateStrip({ onCreateStrip }) {
           className="form-input"
           required
         >
-          <option value="ground">Ground</option>
-          <option value="tower">Tower</option>
-          <option value="TRACON">TRACON</option>
+          {Object.entries(ATC_POSITIONS).map(([key, value]) => (
+            <option key={value} value={value}>
+              {key.charAt(0) + key.slice(1).toLowerCase()}
+            </option>
+          ))}
         </select>
       </div>
       <button

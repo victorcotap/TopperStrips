@@ -11,13 +11,15 @@ datasource db {
 }
 
 model FlightStrip {
-  id        String   @id @default(uuid())
-  planeType String
-  missionType String
-  origin    String
-  destination String
-  altitude  Int
-  column    String   // Can be: "ground", "tower", or "TRACON"
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               String   @id @default(uuid())
+  callsign         String
+  aircraftType     String
+  numberOfAircrafts Int     @default(1)
+  missionType      String
+  origin           String
+  destination      String
+  altitude         Int
+  column           String   // Can be: "ground", "tower", or "TRACON"
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }

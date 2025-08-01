@@ -29,7 +29,9 @@ export async function POST(request) {
 
     const strip = await prisma.flightStrip.create({
       data: {
-        planeType: data.planeType,
+        callsign: data.callsign,
+        aircraftType: data.aircraftType,
+        numberOfAircrafts: parseInt(data.numberOfAircrafts, 10),
         missionType: data.missionType,
         origin: data.origin,
         destination: data.destination,

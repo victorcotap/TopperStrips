@@ -23,7 +23,8 @@ export default function ATCColumns({ strips, onStripMove, onStripReorder, onDele
     <div className="atc-columns">
       <ATCColumn
         title="Ground"
-        strips={strips.ground || []}
+        handoffStrips={strips.ground?.handoff || []}
+        mainStrips={strips.ground?.main || []}
         onDragOver={handleDragOver}
         onDrop={handleDrop('ground')}
         onStripReorder={onStripReorder}
@@ -33,7 +34,8 @@ export default function ATCColumns({ strips, onStripMove, onStripReorder, onDele
       />
       <ATCColumn
         title="Tower"
-        strips={strips.tower || []}
+        handoffStrips={strips.tower?.handoff || []}
+        mainStrips={strips.tower?.main || []}
         onDragOver={handleDragOver}
         onDrop={handleDrop('tower')}
         onStripReorder={onStripReorder}
@@ -43,7 +45,8 @@ export default function ATCColumns({ strips, onStripMove, onStripReorder, onDele
       />
       <ATCColumn
         title="TRACON"
-        strips={strips.TRACON || []}
+        handoffStrips={strips.TRACON?.handoff || []}
+        mainStrips={strips.TRACON?.main || []}
         onDragOver={handleDragOver}
         onDrop={handleDrop('TRACON')}
         onStripReorder={onStripReorder}

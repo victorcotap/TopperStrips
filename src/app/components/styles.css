@@ -49,6 +49,71 @@
   flex-direction: column;
   gap: 1rem;
   min-height: 500px;
+  height: 100%;
+}
+
+/* Handoff and Main Areas */
+.atc-column__handoff-area {
+  border: 2px dashed #9ca3af;
+  border-radius: 0.5rem;
+  background-color: rgba(156, 163, 175, 0.05);
+  padding: 0.75rem;
+  min-height: 100px;
+}
+
+.atc-column__main-area {
+  flex: 1;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 0.75rem;
+  padding-top: 0.5rem;
+}
+
+.atc-column__area-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.atc-column__area-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 60px;
+}
+
+.atc-column__empty-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  border: 2px dashed #d1d5db;
+  border-radius: 0.375rem;
+  background-color: rgba(249, 250, 251, 0.5);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.atc-column__empty-area--active {
+  border-color: #3b82f6;
+  background-color: rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+}
+
+.atc-column__empty-text {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
+.atc-column__empty-area--active .atc-column__empty-text {
+  color: #3b82f6;
+  font-weight: 500;
 }
 
 /* Flight Strip */

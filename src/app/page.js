@@ -6,9 +6,9 @@ import ATCColumns from './components/ATCColumns';
 
 export default function Home() {
   const [strips, setStrips] = useState({
-    ground: [],
-    tower: [],
-    TRACON: []
+    ground: { handoff: [], main: [] },
+    tower: { handoff: [], main: [] },
+    TRACON: { handoff: [], main: [] }
   });
 
   const fetchStrips = async () => {
@@ -21,17 +21,27 @@ export default function Home() {
       
       // Initialize the default structure
       const grouped = {
-        ground: [],
-        tower: [],
-        TRACON: []
+        ground: { handoff: [], main: [] },
+        tower: { handoff: [], main: [] },
+        TRACON: { handoff: [], main: [] }
       };
       
       // Only try to reduce if we got an array
       if (Array.isArray(data)) {
         data.forEach(strip => {
           if (strip && strip.column && grouped[strip.column]) {
-            grouped[strip.column].push(strip);
+            const area = strip.area || 'main'; // Default to main for backward compatibility
+            if (grouped[strip.column][area]) {
+              grouped[strip.column][area].push(strip);
+            }
           }
+        });
+        
+        // Sort strips by position within each area
+        Object.keys(grouped).forEach(column => {
+          Object.keys(grouped[column]).forEach(area => {
+            grouped[column][area].sort((a, b) => a.position - b.position);
+          });
         });
       }
 
@@ -40,9 +50,9 @@ export default function Home() {
       console.error('Error fetching strips:', error);
       // Set empty state on error
       setStrips({
-        ground: [],
-        tower: [],
-        TRACON: []
+        ground: { handoff: [], main: [] },
+        tower: { handoff: [], main: [] },
+        TRACON: { handoff: [], main: [] }
       });
     }
   };
@@ -99,7 +109,7 @@ export default function Home() {
     }
   };
 
-  const handleStripReorder = async (stripId, sourceColumn, targetColumn, newPosition) => {
+  const handleStripReorder = async (stripId, sourceColumn, sourceArea, targetColumn, targetArea, newPosition) => {
     try {
       const response = await fetch('/api/strips/reorder', {
         method: 'POST',
@@ -109,7 +119,9 @@ export default function Home() {
         body: JSON.stringify({ 
           stripId, 
           sourceColumn, 
+          sourceArea,
           targetColumn, 
+          targetArea,
           newPosition 
         }),
       });
@@ -143,12 +155,14 @@ export default function Home() {
     setStrips(prevStrips => {
       const newStrips = { ...prevStrips };
       
-      // Find and update the strip in the appropriate column
+      // Find and update the strip in the appropriate column and area
       Object.keys(newStrips).forEach(column => {
-        const stripIndex = newStrips[column].findIndex(strip => strip.id === updatedStrip.id);
-        if (stripIndex !== -1) {
-          newStrips[column][stripIndex] = updatedStrip;
-        }
+        Object.keys(newStrips[column]).forEach(area => {
+          const stripIndex = newStrips[column][area].findIndex(strip => strip.id === updatedStrip.id);
+          if (stripIndex !== -1) {
+            newStrips[column][area][stripIndex] = updatedStrip;
+          }
+        });
       });
       
       return newStrips;

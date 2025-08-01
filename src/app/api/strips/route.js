@@ -31,9 +31,15 @@ export async function POST(request) {
       ? parseInt(data.altitude, 10) 
       : 0;
 
-    // Get the highest position in the target column to append new strip at the end
+    // Default area to 'main' if not provided
+    const area = data.area || 'main';
+    
+    // Get the highest position in the target column+area to append new strip at the end
     const lastStrip = await prisma.flightStrip.findFirst({
-      where: { column: data.column },
+      where: { 
+        column: data.column,
+        area: area
+      },
       orderBy: { position: 'desc' }
     });
     
@@ -50,6 +56,7 @@ export async function POST(request) {
         route: data.route || '',
         altitude: altitude,
         column: data.column,
+        area: area,
         position: nextPosition,
       },
     });

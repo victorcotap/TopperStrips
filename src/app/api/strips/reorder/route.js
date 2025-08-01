@@ -5,11 +5,12 @@ const prisma = new PrismaClient();
 
 export async function POST(request) {
   try {
-    const { stripId, sourceColumn, targetColumn, newPosition } = await request.json();
+    const { stripId, sourceColumn, targetColumn, sourceArea, targetArea, newPosition } = await request.json();
     
-    if (!stripId || sourceColumn === undefined || targetColumn === undefined || newPosition === undefined) {
+    if (!stripId || sourceColumn === undefined || targetColumn === undefined || 
+        sourceArea === undefined || targetArea === undefined || newPosition === undefined) {
       return NextResponse.json({ 
-        error: 'stripId, sourceColumn, targetColumn, and newPosition are required' 
+        error: 'stripId, sourceColumn, targetColumn, sourceArea, targetArea, and newPosition are required' 
       }, { status: 400 });
     }
 
@@ -23,12 +24,15 @@ export async function POST(request) {
     }
 
     // Handle different move scenarios
-    if (sourceColumn === targetColumn) {
-      // Intra-column reordering
-      await handleIntraColumnReorder(stripId, stripToMove.position, newPosition, targetColumn);
+    if (sourceColumn === targetColumn && sourceArea === targetArea) {
+      // Intra-area reordering (same column, same area)
+      await handleIntraAreaReorder(stripId, stripToMove.position, newPosition, targetColumn, targetArea);
+    } else if (sourceColumn === targetColumn) {
+      // Inter-area move (same column, different area)
+      await handleInterAreaMove(stripId, stripToMove.position, sourceArea, targetArea, targetColumn, newPosition);
     } else {
-      // Inter-column move (existing functionality but with position control)
-      await handleInterColumnMove(stripId, stripToMove.position, sourceColumn, targetColumn, newPosition);
+      // Inter-column move (different column, any area)
+      await handleInterColumnMove(stripId, stripToMove.position, sourceColumn, sourceArea, targetColumn, targetArea, newPosition);
     }
 
     return NextResponse.json({ success: true });
@@ -41,7 +45,7 @@ export async function POST(request) {
   }
 }
 
-async function handleIntraColumnReorder(stripId, oldPosition, newPosition, column) {
+async function handleIntraAreaReorder(stripId, oldPosition, newPosition, column, area) {
   // Use a transaction to ensure data consistency
   await prisma.$transaction(async (tx) => {
     if (oldPosition < newPosition) {
@@ -49,6 +53,7 @@ async function handleIntraColumnReorder(stripId, oldPosition, newPosition, colum
       await tx.flightStrip.updateMany({
         where: {
           column: column,
+          area: area,
           position: {
             gt: oldPosition,
             lte: newPosition
@@ -65,6 +70,7 @@ async function handleIntraColumnReorder(stripId, oldPosition, newPosition, colum
       await tx.flightStrip.updateMany({
         where: {
           column: column,
+          area: area,
           position: {
             gte: newPosition,
             lt: oldPosition
@@ -86,12 +92,13 @@ async function handleIntraColumnReorder(stripId, oldPosition, newPosition, colum
   });
 }
 
-async function handleInterColumnMove(stripId, oldPosition, sourceColumn, targetColumn, newPosition) {
+async function handleInterAreaMove(stripId, oldPosition, sourceArea, targetArea, column, newPosition) {
   await prisma.$transaction(async (tx) => {
-    // 1. Remove gap in source column
+    // 1. Remove gap in source area
     await tx.flightStrip.updateMany({
       where: {
-        column: sourceColumn,
+        column: column,
+        area: sourceArea,
         position: {
           gt: oldPosition
         }
@@ -103,10 +110,11 @@ async function handleInterColumnMove(stripId, oldPosition, sourceColumn, targetC
       }
     });
 
-    // 2. Make space in target column
+    // 2. Make space in target area
     await tx.flightStrip.updateMany({
       where: {
-        column: targetColumn,
+        column: column,
+        area: targetArea,
         position: {
           gte: newPosition
         }
@@ -118,11 +126,57 @@ async function handleInterColumnMove(stripId, oldPosition, sourceColumn, targetC
       }
     });
 
-    // 3. Move the strip to new column and position
+    // 3. Move the strip to new area and position
+    await tx.flightStrip.update({
+      where: { id: stripId },
+      data: { 
+        area: targetArea,
+        position: newPosition 
+      }
+    });
+  });
+}
+
+async function handleInterColumnMove(stripId, oldPosition, sourceColumn, sourceArea, targetColumn, targetArea, newPosition) {
+  await prisma.$transaction(async (tx) => {
+    // 1. Remove gap in source column+area
+    await tx.flightStrip.updateMany({
+      where: {
+        column: sourceColumn,
+        area: sourceArea,
+        position: {
+          gt: oldPosition
+        }
+      },
+      data: {
+        position: {
+          decrement: 1
+        }
+      }
+    });
+
+    // 2. Make space in target column+area
+    await tx.flightStrip.updateMany({
+      where: {
+        column: targetColumn,
+        area: targetArea,
+        position: {
+          gte: newPosition
+        }
+      },
+      data: {
+        position: {
+          increment: 1
+        }
+      }
+    });
+
+    // 3. Move the strip to new column, area, and position
     await tx.flightStrip.update({
       where: { id: stripId },
       data: { 
         column: targetColumn,
+        area: targetArea,
         position: newPosition 
       }
     });

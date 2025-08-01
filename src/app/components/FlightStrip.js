@@ -18,7 +18,7 @@ function getMissionTypeColor(missionType) {
   return colorMap[missionType] || '#ffffff'; // Default to white
 }
 
-export default function FlightStrip({ strip, onDelete, onUpdate }) {
+export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
   const backgroundColor = getMissionTypeColor(strip.missionType);
   const [isEditingRoute, setIsEditingRoute] = useState(false);
   const [routeValue, setRouteValue] = useState(strip.route);
@@ -178,6 +178,7 @@ export default function FlightStrip({ strip, onDelete, onUpdate }) {
       onDragStart={(e) => {
         e.dataTransfer.setData('stripId', strip.id);
         e.dataTransfer.setData('sourceColumn', strip.column);
+        e.dataTransfer.setData('sourceArea', area || strip.area || 'main');
       }}
     >
       <div className="flight-strip__delete-container">

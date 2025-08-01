@@ -53,54 +53,137 @@
 
 /* Flight Strip */
 .flight-strip {
-  padding: 1rem;
-  background-color: white;
+  position: relative;
+  padding: 0.75rem;
   border-radius: 0.375rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: move;
   transition: box-shadow 0.2s;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .flight-strip:hover {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
-.flight-strip__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 0.5rem;
-}
-
-.flight-strip__plane-type {
-  font-weight: 600;
-  font-size: 1.125rem;
+.flight-strip__delete-container {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  z-index: 10;
 }
 
 .flight-strip__delete {
   color: #ef4444;
-  padding: 0.25rem 0.5rem;
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
-  font-size: 1.25rem;
+  font-size: 1.125rem;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .flight-strip__delete:hover {
   color: #b91c1c;
+  background: rgba(255, 255, 255, 0.95);
+  transform: scale(1.1);
 }
 
-.flight-strip__details {
+.flight-strip__grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
+  grid-template-columns: 25% 25% 50%;
+  margin-top: 0.25rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.flight-strip__column {
+  display: flex;
+  flex-direction: column;
+  min-height: 4.5rem;
+  border-right: 1px solid #d1d5db;
+  padding: 0.5rem;
+}
+
+.flight-strip__column:last-child {
+  border-right: none;
+}
+
+.flight-strip__column--left {
+  align-items: flex-start;
+}
+
+.flight-strip__column--center {
+  align-items: center;
+}
+
+.flight-strip__column--right {
+  align-items: flex-end;
+}
+
+.flight-strip__column > div {
   font-size: 0.875rem;
+  line-height: 1.2;
+  min-height: 1.5rem;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.125rem 0;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.flight-strip__label {
-  color: #4b5563;
+.flight-strip__column > div:last-child {
+  border-bottom: none;
 }
 
-.flight-strip__value {
+.flight-strip__empty {
+  /* Empty placeholder for alignment */
+  visibility: hidden;
+  border-bottom: none !important;
+}
+
+.flight-strip__callsign {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #1f2937;
+}
+
+.flight-strip__origin,
+.flight-strip__destination {
+  font-weight: 600;
+  color: #374151;
+}
+
+.flight-strip__mission {
+  font-weight: 600;
+  color: #1f2937;
+  width: 100%;
+  text-align: right;
+}
+
+.flight-strip__aircraft {
   font-weight: 500;
+  color: #374151;
+}
+
+.flight-strip__count {
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.flight-strip__altitude {
+  font-weight: 600;
+  color: #1f2937;
+  width: 100%;
+  text-align: right;
 }
 
 /* Create Strip Form */
@@ -139,8 +222,8 @@
 
 /* Drop Zones */
 .drop-zone {
-  height: 4px;
-  margin: 2px 0;
+  height: 12px;
+  margin: 0px 0 0px 0;
   background-color: transparent;
   border-radius: 2px;
   transition: all 0.2s ease;
@@ -148,7 +231,8 @@
 }
 
 .drop-zone--active {
-  height: 8px;
+  height: 16px;
+  margin: 12px 0 4px 0;
   background-color: #3b82f6;
   opacity: 1;
   box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);

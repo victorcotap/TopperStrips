@@ -1,0 +1,22 @@
+{
+  "name": "topperstrips",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "next": "15.4.5",
+    "socket.io-client": "^4.8.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@prisma/client": "^6.13.0",
+    "eslint": "^9",
+    "eslint-config-next": "15.4.5",
+    "prisma": "^6.13.0"
+  }
+}

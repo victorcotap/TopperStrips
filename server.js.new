@@ -1,0 +1,62 @@
+const { createServer } = require('http');
+const { parse } = require('url');
+const next = require('next');
+const { Server } = require('socket.io');
+const { PrismaClient } = require('@prisma/client');
+
+const dev = process.env.NODE_ENV !== 'production';
+const app = next({ dev });
+const handle = app.getRequestHandler();
+const prisma = new PrismaClient();
+
+// Create a global io instance that can be imported by the API routes
+let io;
+
+app.prepare().then(() => {
+  const server = createServer((req, res) => {
+    const parsedUrl = parse(req.url, true);
+    return handle(req, res, parsedUrl);
+  });
+
+  io = new Server(server);
+
+  // Make io globally available
+  global.io = io;
+
+  io.on('connection', async (socket) => {
+    console.log('Client connected:', socket.id);
+
+    try {
+      // Send initial state to new client
+      const strips = await prisma.flightStrip.findMany();
+      const grouped = strips.reduce((acc, strip) => {
+        if (!acc[strip.column]) acc[strip.column] = [];
+        acc[strip.column].push(strip);
+        return acc;
+      }, {
+        ground: [],
+        tower: [],
+        TRACON: []
+      });
+      
+      socket.emit('boardState', grouped);
+      console.log('Sent initial state to client:', socket.id);
+    } catch (error) {
+      console.error('Error sending initial state:', error);
+      socket.emit('error', { message: 'Failed to load initial state' });
+    }
+
+    socket.on('error', (error) => {
+      console.error('Socket error for client', socket.id, ':', error);
+    });
+
+    socket.on('disconnect', (reason) => {
+      console.log('Client disconnected:', socket.id, 'Reason:', reason);
+    });
+  });
+
+  server.listen(3001, (err) => {
+    if (err) throw err;
+    console.log('> Ready on http://localhost:3001');
+  });
+});

@@ -214,6 +214,33 @@
   text-align: right;
 }
 
+.flight-strip__altitude-display {
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 2px;
+  transition: background-color 0.2s;
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+
+.flight-strip__altitude-display:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.flight-strip__altitude-input {
+  width: 100%;
+  padding: 2px 4px;
+  border: 1px solid #3b82f6;
+  border-radius: 2px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1f2937;
+  background-color: white;
+  text-align: left;
+  outline: none;
+}
+
 /* Create Strip Form */
 .create-strip-form {
   width: 100%;

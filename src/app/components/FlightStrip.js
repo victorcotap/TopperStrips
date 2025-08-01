@@ -22,7 +22,10 @@ export default function FlightStrip({ strip, onDelete, onUpdate }) {
   const backgroundColor = getMissionTypeColor(strip.missionType);
   const [isEditingRoute, setIsEditingRoute] = useState(false);
   const [routeValue, setRouteValue] = useState(strip.route);
+  const [isEditingAltitude, setIsEditingAltitude] = useState(false);
+  const [altitudeValue, setAltitudeValue] = useState(strip.altitude);
   const inputRef = useRef(null);
+  const altitudeInputRef = useRef(null);
 
   // Focus input when editing starts
   useEffect(() => {
@@ -32,10 +35,22 @@ export default function FlightStrip({ strip, onDelete, onUpdate }) {
     }
   }, [isEditingRoute]);
 
+  useEffect(() => {
+    if (isEditingAltitude && altitudeInputRef.current) {
+      altitudeInputRef.current.focus();
+      altitudeInputRef.current.select();
+    }
+  }, [isEditingAltitude]);
+
   // Update route value when strip changes
   useEffect(() => {
     setRouteValue(strip.route);
   }, [strip.route]);
+
+  // Update altitude value when strip changes
+  useEffect(() => {
+    setAltitudeValue(strip.altitude);
+  }, [strip.altitude]);
 
   const handleRouteDoubleClick = () => {
     setIsEditingRoute(true);
@@ -96,6 +111,65 @@ export default function FlightStrip({ strip, onDelete, onUpdate }) {
     handleRouteSave();
   };
 
+  const handleAltitudeDoubleClick = () => {
+    setIsEditingAltitude(true);
+  };
+
+  const handleAltitudeSave = async () => {
+    if (altitudeValue === strip.altitude) {
+      setIsEditingAltitude(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/strips/${strip.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ altitude: altitudeValue }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update altitude');
+      }
+
+      const updatedStrip = await response.json();
+      
+      // Call onUpdate if provided to update parent state
+      if (onUpdate) {
+        onUpdate(updatedStrip);
+      }
+      
+      setIsEditingAltitude(false);
+    } catch (error) {
+      console.error('Error updating altitude:', error);
+      // Revert to original value on error
+      setAltitudeValue(strip.altitude);
+      setIsEditingAltitude(false);
+      alert('Failed to update altitude');
+    }
+  };
+
+  const handleAltitudeCancel = () => {
+    setAltitudeValue(strip.altitude);
+    setIsEditingAltitude(false);
+  };
+
+  const handleAltitudeKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAltitudeSave();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      handleAltitudeCancel();
+    }
+  };
+
+  const handleAltitudeBlur = () => {
+    handleAltitudeSave();
+  };
+
   return (
     <div
       draggable
@@ -151,7 +225,30 @@ export default function FlightStrip({ strip, onDelete, onUpdate }) {
             )}
           </div>
           <div className="flight-strip__empty"></div>
-          <div className="flight-strip__altitude">{formatAltitude(strip.altitude)}</div>
+          <div className="flight-strip__altitude">
+            {isEditingAltitude ? (
+              <input
+                ref={altitudeInputRef}
+                type="number"
+                value={altitudeValue}
+                onChange={(e) => setAltitudeValue(parseInt(e.target.value, 10) || 0)}
+                onBlur={handleAltitudeBlur}
+                onKeyDown={handleAltitudeKeyDown}
+                className="flight-strip__altitude-input"
+                min="0"
+                max="50000"
+                step="1000"
+              />
+            ) : (
+              <span
+                onDoubleClick={handleAltitudeDoubleClick}
+                className="flight-strip__altitude-display"
+                title="Double-click to edit altitude"
+              >
+                {formatAltitude(strip.altitude)}
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>

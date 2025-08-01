@@ -138,6 +138,26 @@ export default function Home() {
     }
   };
 
+  const handleStripUpdate = async (updatedStrip) => {
+    // Update the local state immediately for responsive UI
+    setStrips(prevStrips => {
+      const newStrips = { ...prevStrips };
+      
+      // Find and update the strip in the appropriate column
+      Object.keys(newStrips).forEach(column => {
+        const stripIndex = newStrips[column].findIndex(strip => strip.id === updatedStrip.id);
+        if (stripIndex !== -1) {
+          newStrips[column][stripIndex] = updatedStrip;
+        }
+      });
+      
+      return newStrips;
+    });
+    
+    // Optionally refresh from server to ensure consistency
+    // await fetchStrips();
+  };
+
   return (
     <main className="main-container">
       <CreateStrip onCreateStrip={handleCreateStrip} />
@@ -146,6 +166,7 @@ export default function Home() {
         onStripMove={handleStripMove}
         onStripReorder={handleStripReorder}
         onDelete={handleDelete}
+        onStripUpdate={handleStripUpdate}
       />
     </main>
   );

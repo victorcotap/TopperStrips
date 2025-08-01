@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import FlightStrip from './FlightStrip';
 
-export default function ATCColumn({ title, strips, onDragOver, onDrop, onDelete, onStripReorder, className = '' }) {
+export default function ATCColumn({ title, strips, onDragOver, onDrop, onDelete, onStripReorder, onStripUpdate, className = '' }) {
   const [dragOverIndex, setDragOverIndex] = useState(null);
 
   const getColumnFromClassName = (className) => {
@@ -77,6 +77,7 @@ export default function ATCColumn({ title, strips, onDragOver, onDrop, onDelete,
             <FlightStrip
               strip={strip}
               onDelete={onDelete}
+              onUpdate={onStripUpdate}
             />
             {/* Drop zone after each strip */}
             <div

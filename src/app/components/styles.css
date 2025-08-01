@@ -54,12 +54,12 @@
 /* Flight Strip */
 .flight-strip {
   position: relative;
-  padding: 0.75rem;
+  /* padding: 0.75rem; */
   border-radius: 0.375rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: move;
   transition: box-shadow 0.2s;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  /* border: 1px solid rgba(0, 0, 0, 0.1); */
 }
 
 .flight-strip:hover {
@@ -166,7 +166,34 @@
   font-weight: 600;
   color: #1f2937;
   width: 100%;
-  text-align: right;
+  text-align: left;
+}
+
+.flight-strip__route-display {
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 2px;
+  transition: background-color 0.2s;
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+
+.flight-strip__route-display:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.flight-strip__route-input {
+  width: 100%;
+  padding: 2px 4px;
+  border: 1px solid #3b82f6;
+  border-radius: 2px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1f2937;
+  background-color: white;
+  text-align: left;
+  outline: none;
 }
 
 .flight-strip__aircraft {

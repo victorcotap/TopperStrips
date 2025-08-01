@@ -20,6 +20,7 @@ model FlightStrip {
   destination      String
   altitude         Int
   column           String   // Can be: "ground", "tower", or "TRACON"
+  position         Int      @default(0) // Position within the column for ordering
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 }

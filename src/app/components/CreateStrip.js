@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createEmptyFlightStrip, validateFlightStrip, ATC_POSITIONS } from '@/models/FlightStrip';
+import { createEmptyFlightStrip, validateFlightStrip, ATC_POSITIONS, MISSION_TYPES, AIRCRAFT_TYPES } from '@/models/FlightStrip';
 
 export default function CreateStrip({ onCreateStrip }) {
   const [formData, setFormData] = useState(createEmptyFlightStrip());
@@ -47,15 +47,20 @@ export default function CreateStrip({ onCreateStrip }) {
         />
       </div>
       <div className="form-group">
-        <input
-          type="text"
+        <select
           name="aircraftType"
           value={formData.aircraftType}
           onChange={handleChange}
-          placeholder="Aircraft Type"
           className="form-input"
           required
-        />
+        >
+          <option value="">Select Aircraft Type</option>
+          {Object.entries(AIRCRAFT_TYPES).map(([key, value]) => (
+            <option key={value} value={value}>
+              {value}
+            </option>
+          ))}
+        </select>
       </div>
       <div className="form-group">
         <input
@@ -70,15 +75,20 @@ export default function CreateStrip({ onCreateStrip }) {
         />
       </div>
       <div className="form-group">
-        <input
-          type="text"
+        <select
           name="missionType"
           value={formData.missionType}
           onChange={handleChange}
-          placeholder="Mission Type"
           className="form-input"
           required
-        />
+        >
+          <option value="">Select Mission Type</option>
+          {Object.entries(MISSION_TYPES).map(([key, value]) => (
+            <option key={value} value={value}>
+              {value}
+            </option>
+          ))}
+        </select>
       </div>
       <div className="form-group">
         <input

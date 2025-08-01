@@ -1,3 +1,9 @@
+/* Main Container */
+.main-container {
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
 /* ATC Columns Layout */
 .atc-columns {
   display: grid;
@@ -129,4 +135,21 @@
 
 .submit-button:hover {
   background-color: #2563eb;
+}
+
+/* Drop Zones */
+.drop-zone {
+  height: 4px;
+  margin: 2px 0;
+  background-color: transparent;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  opacity: 0;
+}
+
+.drop-zone--active {
+  height: 8px;
+  background-color: #3b82f6;
+  opacity: 1;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
 }

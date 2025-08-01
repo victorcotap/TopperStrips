@@ -4,7 +4,7 @@ import ATCColumn from './ATCColumn';
 
 import './styles.css';
 
-export default function ATCColumns({ strips, onStripMove, onDelete }) {
+export default function ATCColumns({ strips, onStripMove, onStripReorder, onDelete }) {
   const handleDragOver = (e) => {
     e.preventDefault();
   };
@@ -26,6 +26,7 @@ export default function ATCColumns({ strips, onStripMove, onDelete }) {
         strips={strips.ground || []}
         onDragOver={handleDragOver}
         onDrop={handleDrop('ground')}
+        onStripReorder={onStripReorder}
         onDelete={onDelete}
         className="atc-column atc-column--departure"
       />
@@ -34,6 +35,7 @@ export default function ATCColumns({ strips, onStripMove, onDelete }) {
         strips={strips.tower || []}
         onDragOver={handleDragOver}
         onDrop={handleDrop('tower')}
+        onStripReorder={onStripReorder}
         onDelete={onDelete}
         className="atc-column atc-column--enroute"
       />
@@ -42,6 +44,7 @@ export default function ATCColumns({ strips, onStripMove, onDelete }) {
         strips={strips.TRACON || []}
         onDragOver={handleDragOver}
         onDrop={handleDrop('TRACON')}
+        onStripReorder={onStripReorder}
         onDelete={onDelete}
         className="atc-column atc-column--arrival"
       />

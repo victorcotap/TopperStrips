@@ -1,51 +1,90 @@
 'use client';
 
-import { formatAltitude } from '@/models/FlightStrip';
+import { useState } from 'react';
+import FlightStrip from './FlightStrip';
 
-export default function ATCColumn({ title, strips, onDragOver, onDrop, onDelete, className = '' }) {
+export default function ATCColumn({ title, strips, onDragOver, onDrop, onDelete, onStripReorder, className = '' }) {
+  const [dragOverIndex, setDragOverIndex] = useState(null);
+
+  const getColumnFromClassName = (className) => {
+    if (className.includes('departure')) return 'ground';
+    if (className.includes('enroute')) return 'tower';
+    if (className.includes('arrival')) return 'TRACON';
+    return 'ground'; // fallback
+  };
+
+  const column = getColumnFromClassName(className);
+
+  const handleDropZoneDragOver = (e, index) => {
+    e.preventDefault();
+    e.stopPropagation(); // Prevent event from bubbling up to column handler
+    setDragOverIndex(index);
+  };
+
+  const handleDropZoneDrop = (e, dropIndex) => {
+    e.preventDefault();
+    e.stopPropagation(); // Prevent event from bubbling up to column handler
+    setDragOverIndex(null);
+    
+    const stripId = e.dataTransfer.getData('stripId');
+    const sourceColumn = e.dataTransfer.getData('sourceColumn');
+    
+    if (sourceColumn === column) {
+      // Intra-column reordering
+      onStripReorder(stripId, sourceColumn, column, dropIndex);
+    } else {
+      // Inter-column move to specific position
+      onStripReorder(stripId, sourceColumn, column, dropIndex);
+    }
+  };
+
+  const handleDropZoneDragLeave = () => {
+    setDragOverIndex(null);
+  };
+
+  // Fallback for dropping on the column itself (append to end)
+  const handleColumnDrop = (e) => {
+    e.preventDefault();
+    setDragOverIndex(null);
+    
+    const stripId = e.dataTransfer.getData('stripId');
+    const sourceColumn = e.dataTransfer.getData('sourceColumn');
+    
+    if (sourceColumn !== column) {
+      // Only handle inter-column moves here, append to end
+      onDrop(e);
+    }
+  };
+
   return (
     <div 
       className={className}
       onDragOver={onDragOver}
-      onDrop={onDrop}
+      onDrop={handleColumnDrop}
     >
       <h2 className="atc-column__title">{title}</h2>
       <div className="atc-column__content">
-        {strips.map((strip) => (
-          <div
-            key={strip.id}
-            draggable
-            className="flight-strip"
-            onDragStart={(e) => {
-              e.dataTransfer.setData('stripId', strip.id);
-              e.dataTransfer.setData('sourceColumn', strip.column);
-            }}
-          >
-            <div className="flight-strip__header">
-              <span className="flight-strip__plane-type">{strip.callsign}</span>
-              <button
-                onClick={() => onDelete(strip.id)}
-                className="flight-strip__delete"
-                title="Delete strip"
-              >
-                ×
-              </button>
-            </div>
-            <div className="flight-strip__details">
-              <div className="flight-strip__label">Aircraft:</div>
-              <div className="flight-strip__value">
-                {strip.aircraftType}
-                {strip.numberOfAircrafts > 1 && ` (${strip.numberOfAircrafts})`}
-              </div>
-              <div className="flight-strip__label">Mission:</div>
-              <div className="flight-strip__value">{strip.missionType}</div>
-              <div className="flight-strip__label">Alt:</div>
-              <div className="flight-strip__value">{formatAltitude(strip.altitude)}</div>
-              <div className="flight-strip__label">From:</div>
-              <div className="flight-strip__value">{strip.origin}</div>
-              <div className="flight-strip__label">To:</div>
-              <div className="flight-strip__value">{strip.destination}</div>
-            </div>
+        {/* Drop zone at the top */}
+        <div
+          className={`drop-zone ${dragOverIndex === 0 ? 'drop-zone--active' : ''}`}
+          onDragOver={(e) => handleDropZoneDragOver(e, 0)}
+          onDrop={(e) => handleDropZoneDrop(e, 0)}
+          onDragLeave={handleDropZoneDragLeave}
+        />
+        
+        {strips.map((strip, index) => (
+          <div key={strip.id}>
+            <FlightStrip
+              strip={strip}
+              onDelete={onDelete}
+            />
+            {/* Drop zone after each strip */}
+            <div
+              className={`drop-zone ${dragOverIndex === index + 1 ? 'drop-zone--active' : ''}`}
+              onDragOver={(e) => handleDropZoneDragOver(e, index + 1)}
+              onDrop={(e) => handleDropZoneDrop(e, index + 1)}
+              onDragLeave={handleDropZoneDragLeave}
+            />
           </div>
         ))}
       </div>

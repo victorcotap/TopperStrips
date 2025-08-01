@@ -99,6 +99,32 @@ export default function Home() {
     }
   };
 
+  const handleStripReorder = async (stripId, sourceColumn, targetColumn, newPosition) => {
+    try {
+      const response = await fetch('/api/strips/reorder', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          stripId, 
+          sourceColumn, 
+          targetColumn, 
+          newPosition 
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to reorder strip');
+      }
+
+      await fetchStrips();
+    } catch (error) {
+      console.error('Error reordering strip:', error);
+      alert('Failed to reorder strip: ' + error.message);
+    }
+  };
+
   const handleDelete = async (stripId) => {
     try {
       const response = await fetch(`/api/strips/${stripId}`, {
@@ -113,11 +139,12 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="main-container">
       <CreateStrip onCreateStrip={handleCreateStrip} />
       <ATCColumns
         strips={strips}
         onStripMove={handleStripMove}
+        onStripReorder={handleStripReorder}
         onDelete={handleDelete}
       />
     </main>

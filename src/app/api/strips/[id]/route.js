@@ -14,9 +14,30 @@ export async function PATCH(request, context) {
 
     const data = await request.json();
     
+    // If moving to a different column, assign next position in target column
+    if (data.column) {
+      const lastStrip = await prisma.flightStrip.findFirst({
+        where: { column: data.column },
+        orderBy: { position: 'desc' }
+      });
+      
+      const nextPosition = lastStrip ? lastStrip.position + 1 : 0;
+      
+      const updatedStrip = await prisma.flightStrip.update({
+        where: { id },
+        data: { 
+          column: data.column,
+          position: nextPosition
+        }
+      });
+
+      return NextResponse.json(updatedStrip);
+    }
+
+    // For other updates (not column moves)
     const updatedStrip = await prisma.flightStrip.update({
       where: { id },
-      data: { column: data.column }
+      data: data
     });
 
     return NextResponse.json(updatedStrip);
@@ -38,12 +59,43 @@ export async function DELETE(request, context) {
       return NextResponse.json({ error: 'Strip ID is required' }, { status: 400 });
     }
     
+    // Get the strip details before deletion for position recalculation
+    const stripToDelete = await prisma.flightStrip.findUnique({
+      where: { id }
+    });
+    
+    if (!stripToDelete) {
+      return NextResponse.json({ error: 'Strip not found' }, { status: 404 });
+    }
+    
+    // Delete the strip
     await prisma.flightStrip.delete({
       where: { id }
     });
 
+    // Recalculate positions for remaining strips in the same column
+    // Decrement position for all strips that had position > deleted strip's position
+    await prisma.flightStrip.updateMany({
+      where: {
+        column: stripToDelete.column,
+        position: {
+          gt: stripToDelete.position
+        }
+      },
+      data: {
+        position: {
+          decrement: 1
+        }
+      }
+    });
+
     // Get all strips for broadcast
-    const allStrips = await prisma.flightStrip.findMany();
+    const allStrips = await prisma.flightStrip.findMany({
+      orderBy: [
+        { column: 'asc' },
+        { position: 'asc' }
+      ]
+    });
     const grouped = allStrips.reduce((acc, s) => {
       if (!acc[s.column]) acc[s.column] = [];
       acc[s.column].push(s);

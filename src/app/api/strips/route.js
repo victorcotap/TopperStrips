@@ -5,7 +5,12 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    const strips = await prisma.flightStrip.findMany();
+    const strips = await prisma.flightStrip.findMany({
+      orderBy: [
+        { column: 'asc' },
+        { position: 'asc' }
+      ]
+    });
     if (!Array.isArray(strips)) {
       console.error('Invalid data format from database');
       return NextResponse.json([], { status: 200 }); // Return empty array instead of error
@@ -27,6 +32,14 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Altitude must be a valid number' }, { status: 400 });
     }
 
+    // Get the highest position in the target column to append new strip at the end
+    const lastStrip = await prisma.flightStrip.findFirst({
+      where: { column: data.column },
+      orderBy: { position: 'desc' }
+    });
+    
+    const nextPosition = lastStrip ? lastStrip.position + 1 : 0;
+
     const strip = await prisma.flightStrip.create({
       data: {
         callsign: data.callsign,
@@ -37,6 +50,7 @@ export async function POST(request) {
         destination: data.destination,
         altitude: altitude,
         column: data.column,
+        position: nextPosition,
       },
     });
     

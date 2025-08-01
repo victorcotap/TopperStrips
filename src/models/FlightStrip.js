@@ -9,6 +9,7 @@
  * @property {string} destination - Arrival airport or location code
  * @property {number} altitude - Flight altitude in feet
  * @property {('ground'|'tower'|'TRACON')} column - Current ATC control position
+ * @property {number} position - Position within the column for ordering (0-indexed)
  */
 
 /**
@@ -63,6 +64,52 @@ export const ATC_POSITIONS = Object.freeze({
   GROUND: 'ground',
   TOWER: 'tower',
   TRACON: 'TRACON'
+});
+
+/**
+ * Available mission types
+ * @type {Object.<string, string>}
+ */
+export const MISSION_TYPES = Object.freeze({
+  CAP: 'CAP',
+  CAS: 'CAS',
+  STRIKE: 'Strike',
+  SEAD: 'SEAD',
+  BAI: 'BAI',
+  PATTERN: 'Pattern',
+  VFR: 'VFR',
+  IFR: 'IFR'
+});
+
+/**
+ * Available aircraft types
+ * @type {Object.<string, string>}
+ */
+export const AIRCRAFT_TYPES = Object.freeze({
+  F4: 'F4',
+  F5: 'F5',
+  F14: 'F14',
+  F15: 'F15',
+  F16: 'F16',
+  F18: 'F18',
+  F22: 'F22',
+  F35: 'F35',
+  F86: 'F86',
+  A10: 'A10',
+  AV8: 'AV8',
+  C130: 'C130',
+  M2C: 'M2C',
+  SU25: 'SU25',
+  SU27: 'SU27',
+  SU33: 'SU33',
+  MIG29: 'MIG29',
+  AH64: 'AH64',
+  OH58: 'OH58',
+  CH47: 'CH47',
+  UH1: 'UH1',
+  SA342: 'SA342',
+  MI8: 'MI8',
+  MI24: 'MI24'
 });
 
 /**

@@ -47,6 +47,7 @@ export async function POST(request) {
         missionType: data.missionType,
         origin: data.origin,
         destination: data.destination,
+        route: data.route || '',
         altitude: altitude,
         column: data.column,
         position: nextPosition,

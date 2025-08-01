@@ -156,12 +156,13 @@
 }
 
 .flight-strip__origin,
-.flight-strip__destination {
+.flight-strip__destination,
+.flight-strip__mission {
   font-weight: 600;
   color: #374151;
 }
 
-.flight-strip__mission {
+.flight-strip__route {
   font-weight: 600;
   color: #1f2937;
   width: 100%;

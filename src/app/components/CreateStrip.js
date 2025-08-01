@@ -129,6 +129,17 @@ export default function CreateStrip({ onCreateStrip }) {
         />
       </div>
       <div className="form-group">
+        <label className="form-label">Route (Optional)</label>
+        <input
+          type="text"
+          name="route"
+          value={formData.route}
+          onChange={handleChange}
+          placeholder="Flight route"
+          className="form-input"
+        />
+      </div>
+      <div className="form-group">
         <label className="form-label">Altitude (Optional)</label>
         <input
           type="number"

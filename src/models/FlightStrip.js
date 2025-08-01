@@ -7,6 +7,7 @@
  * @property {string} missionType - Type of mission or flight operation
  * @property {string} origin - Departure airport or location code
  * @property {string} destination - Arrival airport or location code
+ * @property {string} route - Flight route information
  * @property {number} altitude - Flight altitude in feet
  * @property {('ground'|'tower'|'TRACON')} column - Current ATC control position
  * @property {number} position - Position within the column for ordering (0-indexed)
@@ -24,6 +25,7 @@ export function createEmptyFlightStrip() {
     missionType: '',
     origin: '',
     destination: '',
+    route: '',
     altitude: 0,
     column: 'ground'
   };
@@ -42,6 +44,7 @@ export function validateFlightStrip(strip) {
   if (!strip.missionType) errors.push('Mission type is required');
   if (!strip.origin) errors.push('Origin is required');
   if (!strip.destination) errors.push('Destination is required');
+  // Route is optional, will default to empty string if not provided
   // Altitude is optional, will default to 0 if not provided
   if (typeof strip.numberOfAircrafts !== 'number' || strip.numberOfAircrafts < 1) {
     errors.push('Number of aircrafts must be a positive number');

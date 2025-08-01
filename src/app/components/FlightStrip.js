@@ -50,10 +50,10 @@ export default function FlightStrip({ strip, onDelete }) {
         <div className="flight-strip__column flight-strip__column--center">
           <div className="flight-strip__origin">{strip.origin}</div>
           <div className="flight-strip__destination">{strip.destination}</div>
-          <div className="flight-strip__empty"></div>
+          <div className="flight-strip__mission">{strip.missionType}</div>
         </div>
         <div className="flight-strip__column flight-strip__column--right">
-          <div className="flight-strip__mission">{strip.missionType}</div>
+          <div className="flight-strip__route">{strip.route}</div>
           <div className="flight-strip__empty"></div>
           <div className="flight-strip__altitude">{formatAltitude(strip.altitude)}</div>
         </div>

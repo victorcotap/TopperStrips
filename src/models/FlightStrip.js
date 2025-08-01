@@ -24,7 +24,7 @@ export function createEmptyFlightStrip() {
     missionType: '',
     origin: '',
     destination: '',
-    altitude: '',
+    altitude: 0,
     column: 'ground'
   };
 }
@@ -42,7 +42,7 @@ export function validateFlightStrip(strip) {
   if (!strip.missionType) errors.push('Mission type is required');
   if (!strip.origin) errors.push('Origin is required');
   if (!strip.destination) errors.push('Destination is required');
-  if (!strip.altitude) errors.push('Altitude is required');
+  // Altitude is optional, will default to 0 if not provided
   if (typeof strip.numberOfAircrafts !== 'number' || strip.numberOfAircrafts < 1) {
     errors.push('Number of aircrafts must be a positive number');
   }

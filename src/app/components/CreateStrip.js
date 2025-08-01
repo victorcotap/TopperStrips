@@ -26,7 +26,17 @@ export default function CreateStrip({ onCreateStrip }) {
   };
 
   const handleChange = (e) => {
-    const value = e.target.type === 'number' ? Number(e.target.value) : e.target.value;
+    let value = e.target.value;
+    
+    if (e.target.type === 'number') {
+      // For altitude field, default to 0 if empty or invalid
+      if (e.target.name === 'altitude' && (value === '' || isNaN(Number(value)))) {
+        value = 0;
+      } else {
+        value = Number(value);
+      }
+    }
+    
     setFormData({
       ...formData,
       [e.target.name]: value
@@ -36,17 +46,19 @@ export default function CreateStrip({ onCreateStrip }) {
   return (
     <form onSubmit={handleSubmit} className="create-strip-form">
       <div className="form-group">
+        <label className="form-label">Callsign</label>
         <input
           type="text"
           name="callsign"
           value={formData.callsign}
           onChange={handleChange}
-          placeholder="Callsign"
+          placeholder="Enter callsign"
           className="form-input"
           required
         />
       </div>
       <div className="form-group">
+        <label className="form-label">Aircraft Type</label>
         <select
           name="aircraftType"
           value={formData.aircraftType}
@@ -63,18 +75,20 @@ export default function CreateStrip({ onCreateStrip }) {
         </select>
       </div>
       <div className="form-group">
+        <label className="form-label">Number of Aircraft</label>
         <input
           type="number"
           name="numberOfAircrafts"
           value={formData.numberOfAircrafts}
           onChange={handleChange}
-          placeholder="Number of Aircrafts"
+          placeholder="1"
           className="form-input"
           min="1"
           required
         />
       </div>
       <div className="form-group">
+        <label className="form-label">Mission Type</label>
         <select
           name="missionType"
           value={formData.missionType}
@@ -91,39 +105,42 @@ export default function CreateStrip({ onCreateStrip }) {
         </select>
       </div>
       <div className="form-group">
+        <label className="form-label">Origin</label>
         <input
           type="text"
           name="origin"
           value={formData.origin}
           onChange={handleChange}
-          placeholder="Origin"
+          placeholder="Departure location"
           className="form-input"
           required
         />
       </div>
       <div className="form-group">
+        <label className="form-label">Destination</label>
         <input
           type="text"
           name="destination"
           value={formData.destination}
           onChange={handleChange}
-          placeholder="Destination"
+          placeholder="Arrival location"
           className="form-input"
           required
         />
       </div>
       <div className="form-group">
+        <label className="form-label">Altitude (Optional)</label>
         <input
           type="number"
           name="altitude"
           value={formData.altitude}
           onChange={handleChange}
-          placeholder="Altitude (ft)"
+          placeholder="Altitude in feet"
           className="form-input"
-          required
         />
       </div>
       <div className="form-group">
+        <label className="form-label">ATC Position</label>
         <select
           name="column"
           value={formData.column}

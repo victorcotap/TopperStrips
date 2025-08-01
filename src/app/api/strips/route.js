@@ -26,11 +26,10 @@ export async function POST(request) {
   try {
     const data = await request.json();
     
-    // Convert altitude to number
-    const altitude = parseInt(data.altitude, 10);
-    if (isNaN(altitude)) {
-      return NextResponse.json({ error: 'Altitude must be a valid number' }, { status: 400 });
-    }
+    // Convert altitude to number, default to 0 if not provided or invalid
+    const altitude = data.altitude && !isNaN(parseInt(data.altitude, 10)) 
+      ? parseInt(data.altitude, 10) 
+      : 0;
 
     // Get the highest position in the target column to append new strip at the end
     const lastStrip = await prisma.flightStrip.findFirst({

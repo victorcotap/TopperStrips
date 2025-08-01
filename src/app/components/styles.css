@@ -286,7 +286,7 @@
   transition: background-color 0.2s;
   display: block;
   width: 100%;
-  text-align: left;
+  text-align: right;
 }
 
 .flight-strip__altitude-display:hover {
@@ -302,8 +302,66 @@
   font-weight: 600;
   color: #1f2937;
   background-color: white;
+  text-align: right;
+  outline: none;
+}
+
+/* General field styling for all editable fields */
+.flight-strip__field-display {
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 2px;
+  transition: background-color 0.2s;
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+
+.flight-strip__field-display:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.flight-strip__field-display--left {
+  text-align: left;
+}
+
+.flight-strip__field-display--right {
+  text-align: right;
+}
+
+.flight-strip__field-input {
+  width: 100%;
+  padding: 2px 4px;
+  border: 1px solid #3b82f6;
+  border-radius: 2px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1f2937;
+  background-color: white;
   text-align: left;
   outline: none;
+}
+
+.flight-strip__field-input--left {
+  text-align: left;
+}
+
+.flight-strip__field-input--right {
+  text-align: right;
+}
+
+.flight-strip__field-select {
+  width: 100%;
+  padding: 2px 4px;
+  border: 1px solid #3b82f6;
+  border-radius: 2px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1f2937;
+  background-color: white;
+  text-align: left;
+  outline: none;
+  cursor: pointer;
 }
 
 /* Create Strip Form */

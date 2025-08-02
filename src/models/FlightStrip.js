@@ -149,6 +149,7 @@ export const AIRCRAFT_TYPES = Object.freeze({
 	H60: 'UH-60',
 	H64: 'UH-64',
 	YK52: 'Yak-52',
+  ZZZZ: 'Placeholder',
 });
 
 /**

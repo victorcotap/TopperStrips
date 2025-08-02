@@ -40,6 +40,7 @@ export default function ATCColumn({ title, handoffStrips, mainStrips, onDragOver
     if (className.includes('departure')) return 'ground';
     if (className.includes('enroute')) return 'tower';
     if (className.includes('arrival')) return 'TRACON';
+    if (className.includes('c2')) return 'C2';
     return 'ground'; // fallback
   };
 

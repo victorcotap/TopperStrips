@@ -8,7 +8,8 @@ export default function Home() {
   const [strips, setStrips] = useState({
     ground: { handoff: [], main: [] },
     tower: { handoff: [], main: [] },
-    TRACON: { handoff: [], main: [] }
+    TRACON: { handoff: [], main: [] },
+    C2: { handoff: [], main: [] }
   });
 
   const fetchStrips = async () => {
@@ -23,7 +24,8 @@ export default function Home() {
       const grouped = {
         ground: { handoff: [], main: [] },
         tower: { handoff: [], main: [] },
-        TRACON: { handoff: [], main: [] }
+        TRACON: { handoff: [], main: [] },
+        C2: { handoff: [], main: [] }
       };
       
       // Only try to reduce if we got an array
@@ -52,7 +54,8 @@ export default function Home() {
       setStrips({
         ground: { handoff: [], main: [] },
         tower: { handoff: [], main: [] },
-        TRACON: { handoff: [], main: [] }
+        TRACON: { handoff: [], main: [] },
+        C2: { handoff: [], main: [] }
       });
     }
   };

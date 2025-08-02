@@ -7,7 +7,7 @@
 /* ATC Columns Layout */
 .atc-columns {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 2rem;
   padding: 2rem;
   width: 100%;
@@ -34,6 +34,11 @@
 
 .atc-column--arrival {
   background-color: #f5f3ff;
+  border: 1px solid #c4b5fd;
+}
+
+.atc-column--c2 {
+  background-color: #fff3f5;
   border: 1px solid #c4b5fd;
 }
 

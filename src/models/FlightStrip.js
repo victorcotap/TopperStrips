@@ -9,7 +9,7 @@
  * @property {string} destination - Arrival airport or location code
  * @property {string} route - Flight route information
  * @property {number} altitude - Flight altitude in feet
- * @property {('ground'|'tower'|'TRACON')} column - Current ATC control position
+ * @property {('ground'|'tower'|'TRACON'|'C2')} column - Current ATC control position
  * @property {('main'|'handoff')} area - Area within the column (main or handoff)
  * @property {number} position - Position within the column+area for ordering (0-indexed)
  */
@@ -51,7 +51,7 @@ export function validateFlightStrip(strip) {
   if (typeof strip.numberOfAircrafts !== 'number' || strip.numberOfAircrafts < 1) {
     errors.push('Number of aircrafts must be a positive number');
   }
-  if (!['ground', 'tower', 'TRACON'].includes(strip.column)) {
+  if (!['ground', 'tower', 'TRACON', 'C2'].includes(strip.column)) {
     errors.push('Invalid column value');
   }
   if (strip.area && !['main', 'handoff'].includes(strip.area)) {
@@ -71,7 +71,8 @@ export function validateFlightStrip(strip) {
 export const ATC_POSITIONS = Object.freeze({
   GROUND: 'ground',
   TOWER: 'tower',
-  TRACON: 'TRACON'
+  TRACON: 'TRACON',
+  C2: 'C2'
 });
 
 /**

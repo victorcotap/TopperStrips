@@ -54,6 +54,17 @@ export default function ATCColumns({ strips, onStripMove, onStripReorder, onDele
         onStripUpdate={onStripUpdate}
         className="atc-column atc-column--arrival"
       />
+      <ATCColumn
+        title="C2"
+        handoffStrips={strips.C2?.handoff || []}
+        mainStrips={strips.C2?.main || []}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop('C2')}
+        onStripReorder={onStripReorder}
+        onDelete={onDelete}
+        onStripUpdate={onStripUpdate}
+        className="atc-column atc-column--c2"
+      />
     </div>
   );
 }

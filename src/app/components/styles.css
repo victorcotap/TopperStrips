@@ -1,7 +1,65 @@
+/* CSS Variables for theming */
+:root {
+  --bg-primary: #f9fafb;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: rgba(255, 255, 255, 0.5);
+  --bg-handoff: rgba(156, 163, 175, 0.05);
+  --bg-empty: rgba(249, 250, 251, 0.5);
+  --bg-empty-active: rgba(59, 130, 246, 0.1);
+  --bg-delete: rgba(255, 255, 255, 0.8);
+  --bg-delete-hover: rgba(255, 255, 255, 0.95);
+  
+  --border-primary: #e5e7eb;
+  --border-secondary: #d1d5db;
+  --border-handoff: #9ca3af;
+  --border-active: #3b82f6;
+  
+  --text-primary: #1f2937;
+  --text-secondary: #374151;
+  --text-tertiary: #6b7280;
+  --text-muted: #9ca3af;
+  --text-accent: #3b82f6;
+  
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.15);
+  --shadow-blue: 0 0 8px rgba(59, 130, 246, 0.3);
+  --shadow-blue-strong: 0 0 8px rgba(59, 130, 246, 0.5);
+}
+
+:root.dark {
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --bg-tertiary: rgba(31, 41, 55, 0.5);
+  --bg-handoff: rgba(75, 85, 99, 0.2);
+  --bg-empty: rgba(17, 24, 39, 0.5);
+  --bg-empty-active: rgba(59, 130, 246, 0.2);
+  --bg-delete: rgba(31, 41, 55, 0.9);
+  --bg-delete-hover: rgba(31, 41, 55, 0.95);
+  
+  --border-primary: #374151;
+  --border-secondary: #4b5563;
+  --border-handoff: #6b7280;
+  --border-active: #3b82f6;
+  
+  --text-primary: #f9fafb;
+  --text-secondary: #e5e7eb;
+  --text-tertiary: #9ca3af;
+  --text-muted: #6b7280;
+  --text-accent: #60a5fa;
+  
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-blue: 0 0 8px rgba(96, 165, 250, 0.4);
+  --shadow-blue-strong: 0 0 8px rgba(96, 165, 250, 0.6);
+}
+
 /* Main Container */
 .main-container {
   min-height: 100vh;
-  background-color: #f9fafb;
+  background-color: var(--bg-primary);
+  transition: background-color 0.3s ease;
 }
 
 /* ATC Columns Layout */
@@ -18,8 +76,9 @@
 .atc-column {
   padding: 1.5rem;
   border-radius: 0.75rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
   height: 100%;
+  transition: box-shadow 0.3s ease;
 }
 
 .atc-column--departure {
@@ -27,9 +86,19 @@
   border: 1px solid #86efac;
 }
 
+:root.dark .atc-column--departure {
+  background-color: #0f1b0f;
+  border: 1px solid #166534;
+}
+
 .atc-column--enroute {
   background-color: #f0f9ff;
   border: 1px solid #7dd3fc;
+}
+
+:root.dark .atc-column--enroute {
+  background-color: #0c1220;
+  border: 1px solid #075985;
 }
 
 .atc-column--arrival {
@@ -37,9 +106,19 @@
   border: 1px solid #c4b5fd;
 }
 
+:root.dark .atc-column--arrival {
+  background-color: #1e1b3a;
+  border: 1px solid #6d28d9;
+}
+
 .atc-column--c2 {
   background-color: #fff3f5;
   border: 1px solid #c4b5fd;
+}
+
+:root.dark .atc-column--c2 {
+  background-color: #2d1b1f;
+  border: 1px solid #be185d;
 }
 
 .atc-column__title {
@@ -47,6 +126,8 @@
   font-weight: 600;
   text-align: center;
   margin-bottom: 1.5rem;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .atc-column__content {
@@ -59,30 +140,33 @@
 
 /* Handoff and Main Areas */
 .atc-column__handoff-area {
-  border: 2px dashed #9ca3af;
+  border: 2px dashed var(--border-handoff);
   border-radius: 0.5rem;
-  background-color: rgba(156, 163, 175, 0.05);
+  background-color: var(--bg-handoff);
   padding: 0.75rem;
   min-height: 100px;
+  transition: all 0.3s ease;
 }
 
 .atc-column__main-area {
   flex: 1;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-primary);
   border-radius: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: var(--bg-tertiary);
   padding: 0.75rem;
   padding-top: 0.5rem;
+  transition: all 0.3s ease;
 }
 
 .atc-column__area-title {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.75rem;
   text-align: center;
+  transition: color 0.3s ease;
 }
 
 /* Handoff Subscription Checkbox */
@@ -98,7 +182,7 @@
   width: 16px;
   height: 16px;
   cursor: pointer;
-  accent-color: #3b82f6;
+  accent-color: var(--text-accent);
 }
 
 .atc-column__area-content {
@@ -113,43 +197,42 @@
   align-items: center;
   justify-content: center;
   min-height: 60px;
-  border: 2px dashed #d1d5db;
+  border: 2px dashed var(--border-secondary);
   border-radius: 0.375rem;
-  background-color: rgba(249, 250, 251, 0.5);
+  background-color: var(--bg-empty);
   transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .atc-column__empty-area--active {
-  border-color: #3b82f6;
-  background-color: rgba(59, 130, 246, 0.1);
-  box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+  border-color: var(--border-active);
+  background-color: var(--bg-empty-active);
+  box-shadow: var(--shadow-blue);
 }
 
 .atc-column__empty-text {
-  color: #9ca3af;
+  color: var(--text-muted);
   font-size: 0.875rem;
   font-style: italic;
+  transition: color 0.3s ease;
 }
 
 .atc-column__empty-area--active .atc-column__empty-text {
-  color: #3b82f6;
+  color: var(--text-accent);
   font-weight: 500;
 }
 
 /* Flight Strip */
 .flight-strip {
   position: relative;
-  /* padding: 0.75rem; */
   border-radius: 0.375rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
   cursor: move;
-  transition: box-shadow 0.2s;
-  /* border: 1px solid rgba(0, 0, 0, 0.1); */
+  transition: box-shadow 0.2s, background-color 0.3s ease;
 }
 
 .flight-strip:hover {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-lg);
 }
 
 .flight-strip__delete-container {
@@ -161,7 +244,7 @@
 
 .flight-strip__delete {
   color: #ef4444;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--bg-delete);
   border: none;
   border-radius: 50%;
   width: 24px;
@@ -177,7 +260,7 @@
 
 .flight-strip__delete:hover {
   color: #b91c1c;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--bg-delete-hover);
   transform: scale(1.1);
 }
 
@@ -185,17 +268,19 @@
   display: grid;
   grid-template-columns: 25% 25% 50%;
   margin-top: 0.25rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-secondary);
   border-radius: 0.25rem;
   overflow: hidden;
+  transition: border-color 0.3s ease;
 }
 
 .flight-strip__column {
   display: flex;
   flex-direction: column;
   min-height: 4.5rem;
-  border-right: 1px solid #d1d5db;
+  border-right: 1px solid var(--border-secondary);
   padding: 0.5rem;
+  transition: border-color 0.3s ease;
 }
 
 .flight-strip__column:last-child {
@@ -222,7 +307,9 @@
   align-items: center;
   width: 100%;
   padding: 0.125rem 0;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-primary);
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
 }
 
 .flight-strip__column > div:last-child {
@@ -238,21 +325,24 @@
 .flight-strip__callsign {
   font-weight: 700;
   font-size: 1rem;
-  color: #1f2937;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .flight-strip__origin,
 .flight-strip__destination,
 .flight-strip__mission {
   font-weight: 600;
-  color: #374151;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
 }
 
 .flight-strip__route {
   font-weight: 600;
-  color: #1f2937;
+  color: var(--text-primary);
   width: 100%;
   text-align: left;
+  transition: color 0.3s ease;
 }
 
 .flight-strip__route-display {
@@ -266,38 +356,42 @@
 }
 
 .flight-strip__route-display:hover {
-  background-color: rgba(59, 130, 246, 0.1);
+  background-color: var(--bg-empty-active);
 }
 
 .flight-strip__route-input {
   width: 100%;
   padding: 2px 4px;
-  border: 1px solid #3b82f6;
+  border: 1px solid var(--border-active);
   border-radius: 2px;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #1f2937;
-  background-color: white;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
   text-align: left;
   outline: none;
+  transition: all 0.3s ease;
 }
 
 .flight-strip__aircraft {
   font-weight: 500;
-  color: #374151;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
 }
 
 .flight-strip__count {
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--text-tertiary);
   font-weight: 500;
+  transition: color 0.3s ease;
 }
 
 .flight-strip__altitude {
   font-weight: 600;
-  color: #1f2937;
+  color: var(--text-primary);
   width: 100%;
   text-align: right;
+  transition: color 0.3s ease;
 }
 
 .flight-strip__altitude-display {
@@ -311,20 +405,21 @@
 }
 
 .flight-strip__altitude-display:hover {
-  background-color: rgba(59, 130, 246, 0.1);
+  background-color: var(--bg-empty-active);
 }
 
 .flight-strip__altitude-input {
   width: 100%;
   padding: 2px 4px;
-  border: 1px solid #3b82f6;
+  border: 1px solid var(--border-active);
   border-radius: 2px;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #1f2937;
-  background-color: white;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
   text-align: right;
   outline: none;
+  transition: all 0.3s ease;
 }
 
 /* General field styling for all editable fields */
@@ -339,7 +434,7 @@
 }
 
 .flight-strip__field-display:hover {
-  background-color: rgba(59, 130, 246, 0.1);
+  background-color: var(--bg-empty-active);
 }
 
 .flight-strip__field-display--left {
@@ -353,14 +448,15 @@
 .flight-strip__field-input {
   width: 100%;
   padding: 2px 4px;
-  border: 1px solid #3b82f6;
+  border: 1px solid var(--border-active);
   border-radius: 2px;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #1f2937;
-  background-color: white;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
   text-align: left;
   outline: none;
+  transition: all 0.3s ease;
 }
 
 .flight-strip__field-input--left {
@@ -374,21 +470,22 @@
 .flight-strip__field-select {
   width: 100%;
   padding: 2px 4px;
-  border: 1px solid #3b82f6;
+  border: 1px solid var(--border-active);
   border-radius: 2px;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #1f2937;
-  background-color: white;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
   text-align: left;
   outline: none;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 /* Create Strip Form */
 .create-strip-form {
   width: 100%;
-  max-width: 56rem;
+  max-width: 75rem;
   margin: 0 auto;
   padding: 2rem;
   display: flex;
@@ -405,20 +502,30 @@
 .form-label {
   font-size: 0.75rem;
   font-weight: 500;
-  color: #6b7280;
+  color: var(--text-tertiary);
   margin-bottom: 0.25rem;
   text-transform: uppercase;
   letter-spacing: 0.025em;
   height: 1rem;
   display: flex;
   align-items: flex-end;
+  transition: color 0.3s ease;
 }
 
 .form-input {
   width: 100%;
   padding: 0.5rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-secondary);
   border-radius: 0.375rem;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.form-input:focus {
+  border-color: var(--border-active);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
 }
 
 .submit-button {
@@ -426,7 +533,10 @@
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
   transition: background-color 0.2s;
+  font-weight: 500;
 }
 
 .submit-button:hover {
@@ -446,7 +556,122 @@
 .drop-zone--active {
   height: 16px;
   margin: 12px 0 4px 0;
-  background-color: #3b82f6;
+  background-color: var(--border-active);
   opacity: 1;
-  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+  box-shadow: var(--shadow-blue-strong);
+}
+
+/* Flight Strip Mission Type Colors */
+.flight-strip--cap {
+  background-color: #fef3e2; /* Pale amber */
+}
+
+.flight-strip--cas {
+  background-color: #e0f2fe; /* Pale cyan */
+}
+
+.flight-strip--strike {
+  background-color: #fee2e2; /* Pale red */
+}
+
+.flight-strip--sead {
+  background-color: #f0f9ff; /* Pale blue */
+}
+
+.flight-strip--bai {
+  background-color: #f3e8ff; /* Pale purple */
+}
+
+.flight-strip--pattern {
+  background-color: #f0fdf4; /* Pale green */
+}
+
+.flight-strip--vfr {
+  background-color: #fffbeb; /* Pale yellow */
+}
+
+.flight-strip--ifr {
+  background-color: #f8fafc; /* Pale gray */
+}
+
+.flight-strip--default {
+  background-color: #ffffff; /* Default white */
+}
+
+/* Dark mode mission type colors */
+:root.dark .flight-strip--cap {
+  background-color: #451a03; /* Dark amber */
+}
+
+:root.dark .flight-strip--cas {
+  background-color: #164e63; /* Dark cyan */
+}
+
+:root.dark .flight-strip--strike {
+  background-color: #7f1d1d; /* Dark red */
+}
+
+:root.dark .flight-strip--sead {
+  background-color: #1e3a8a; /* Dark blue */
+}
+
+:root.dark .flight-strip--bai {
+  background-color: #581c87; /* Dark purple */
+}
+
+:root.dark .flight-strip--pattern {
+  background-color: #14532d; /* Dark green */
+}
+
+:root.dark .flight-strip--vfr {
+  background-color: #713f12; /* Dark yellow */
+}
+
+:root.dark .flight-strip--ifr {
+  background-color: #374151; /* Dark gray */
+}
+
+:root.dark .flight-strip--default {
+  background-color: var(--bg-secondary); /* Dark default */
+}
+
+/* Dark Mode Toggle */
+.dark-mode-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+}
+
+.dark-mode-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.dark-mode-button:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-1px);
+  border-color: var(--border-active);
+}
+
+.dark-mode-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.dark-mode-text {
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
 }

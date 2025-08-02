@@ -3,23 +3,23 @@
 import { useState, useRef, useEffect } from 'react';
 import { formatAltitude, MISSION_TYPES, AIRCRAFT_TYPES } from '@/models/FlightStrip';
 
-// Function to get background color based on mission type
-function getMissionTypeColor(missionType) {
-  const colorMap = {
-    'CAP': '#fef3e2',      // Pale amber
-    'CAS': '#e0f2fe',      // Pale cyan  
-    'Strike': '#fee2e2',   // Pale red
-    'SEAD': '#f0f9ff',     // Pale blue
-    'BAI': '#f3e8ff',      // Pale purple
-    'Pattern': '#f0fdf4',  // Pale green
-    'VFR': '#fffbeb',      // Pale yellow
-    'IFR': '#f8fafc'       // Pale gray
+// Function to get CSS class based on mission type  
+function getMissionTypeClass(missionType) {
+  const classMap = {
+    'CAP': 'flight-strip--cap',
+    'CAS': 'flight-strip--cas',  
+    'Strike': 'flight-strip--strike',
+    'SEAD': 'flight-strip--sead',
+    'BAI': 'flight-strip--bai',
+    'Pattern': 'flight-strip--pattern',
+    'VFR': 'flight-strip--vfr',
+    'IFR': 'flight-strip--ifr'
   };
-  return colorMap[missionType] || '#ffffff'; // Default to white
+  return classMap[missionType] || 'flight-strip--default';
 }
 
 export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
-  const backgroundColor = getMissionTypeColor(strip.missionType);
+  const missionTypeClass = getMissionTypeClass(strip.missionType);
   
   // Editing states for all fields
   const [isEditingCallsign, setIsEditingCallsign] = useState(false);
@@ -286,8 +286,7 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
   return (
     <div
       draggable
-      className="flight-strip"
-      style={{ backgroundColor }}
+      className={`flight-strip ${missionTypeClass}`}
       onDragStart={(e) => {
         e.dataTransfer.setData('stripId', strip.id);
         e.dataTransfer.setData('sourceColumn', strip.column);

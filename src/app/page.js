@@ -11,6 +11,26 @@ export default function Home() {
     TRACON: { handoff: [], main: [] },
     C2: { handoff: [], main: [] }
   });
+  
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Load dark mode preference from localStorage on mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('darkMode');
+    if (savedTheme !== null) {
+      setIsDarkMode(JSON.parse(savedTheme));
+    }
+  }, []);
+
+  // Apply dark mode class to document and save preference
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDarkMode);
+    localStorage.setItem('darkMode', JSON.stringify(isDarkMode));
+  }, [isDarkMode]);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+  };
 
   const fetchStrips = async () => {
     try {
@@ -185,6 +205,22 @@ export default function Home() {
         onDelete={handleDelete}
         onStripUpdate={handleStripUpdate}
       />
+      
+      {/* Dark Mode Toggle */}
+      <div className="dark-mode-toggle">
+        <button 
+          onClick={toggleDarkMode}
+          className="dark-mode-button"
+          aria-label="Toggle dark mode"
+        >
+          <span className="dark-mode-icon">
+            {isDarkMode ? '☀️' : '🌙'}
+          </span>
+          <span className="dark-mode-text">
+            {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+          </span>
+        </button>
+      </div>
     </main>
   );
 }

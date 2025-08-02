@@ -327,6 +327,7 @@
   font-size: 1rem;
   color: var(--text-primary);
   transition: color 0.3s ease;
+  text-transform: uppercase;
 }
 
 .flight-strip__origin,
@@ -335,6 +336,7 @@
   font-weight: 600;
   color: var(--text-secondary);
   transition: color 0.3s ease;
+  text-transform: uppercase;
 }
 
 .flight-strip__route {
@@ -343,6 +345,7 @@
   width: 100%;
   text-align: left;
   transition: color 0.3s ease;
+  text-transform: uppercase;
 }
 
 .flight-strip__route-display {
@@ -377,6 +380,7 @@
   font-weight: 500;
   color: var(--text-secondary);
   transition: color 0.3s ease;
+  text-transform: uppercase;
 }
 
 .flight-strip__count {
@@ -431,6 +435,7 @@
   display: block;
   width: 100%;
   text-align: left;
+  text-transform: uppercase;
 }
 
 .flight-strip__field-display:hover {

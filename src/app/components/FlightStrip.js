@@ -443,7 +443,7 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
                 className="flight-strip__field-display flight-strip__field-display--left"
                 title="Double-click to edit route"
               >
-                {strip.route || 'No route'}
+                {strip.route || 'NO ROUTE'}
               </span>
             )}
           </div>

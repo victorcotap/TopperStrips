@@ -6,6 +6,35 @@ import FlightStrip from './FlightStrip';
 export default function ATCColumn({ title, handoffStrips, mainStrips, onDragOver, onDrop, onDelete, onStripReorder, onStripUpdate, className = '' }) {
   const [dragOverIndex, setDragOverIndex] = useState(null);
   const [dragOverArea, setDragOverArea] = useState(null);
+  const [handoffSubscribed, setHandoffSubscribed] = useState(false);
+
+  // Function to play notification sound
+  const playHandoffSound = () => {
+    try {
+      // Try to use the browser's built-in beep sound first
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        // Alternative: generate a simple ding using Web Audio API
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(800, audioContext.currentTime); // High frequency for ding
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.01);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.3);
+      }
+    } catch (error) {
+      console.warn('Could not play handoff notification sound:', error);
+    }
+  };
 
   const getColumnFromClassName = (className) => {
     if (className.includes('departure')) return 'ground';
@@ -32,6 +61,11 @@ export default function ATCColumn({ title, handoffStrips, mainStrips, onDragOver
     const stripId = e.dataTransfer.getData('stripId');
     const sourceColumn = e.dataTransfer.getData('sourceColumn');
     const sourceArea = e.dataTransfer.getData('sourceArea') || 'main';
+    
+    // Play sound if dropping into handoff area and user is subscribed
+    if (area === 'handoff' && handoffSubscribed) {
+      playHandoffSound();
+    }
     
     onStripReorder(stripId, sourceColumn, sourceArea, column, area, dropIndex);
   };
@@ -67,7 +101,17 @@ export default function ATCColumn({ title, handoffStrips, mainStrips, onDragOver
       <div className="atc-column__content">
         {/* Handoff Area */}
         <div className="atc-column__handoff-area">
-          <h3 className="atc-column__area-title">Handoff</h3>
+          <h3 className="atc-column__area-title">
+            <label className="handoff-subscription">
+              <input
+                type="checkbox"
+                checked={handoffSubscribed}
+                onChange={(e) => setHandoffSubscribed(e.target.checked)}
+                className="handoff-subscription__checkbox"
+              />
+              Handoff
+            </label>
+          </h3>
           <div className="atc-column__area-content">
             {handoffStrips.length === 0 ? (
               <div 

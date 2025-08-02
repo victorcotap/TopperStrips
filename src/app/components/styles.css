@@ -80,6 +80,22 @@
   text-align: center;
 }
 
+/* Handoff Subscription Checkbox */
+.handoff-subscription {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.handoff-subscription__checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #3b82f6;
+}
+
 .atc-column__area-content {
   display: flex;
   flex-direction: column;

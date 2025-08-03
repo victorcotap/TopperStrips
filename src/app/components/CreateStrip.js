@@ -68,7 +68,7 @@ export default function CreateStrip({ onCreateStrip }) {
         >
           <option value="">Select Aircraft Type</option>
           {Object.entries(AIRCRAFT_TYPES).map(([key, value]) => (
-            <option key={value} value={value}>
+            <option key={value} value={key}>
               {value}
             </option>
           ))}

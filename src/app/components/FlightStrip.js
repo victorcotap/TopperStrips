@@ -336,7 +336,7 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
                 className="flight-strip__field-select"
               >
                 {Object.entries(AIRCRAFT_TYPES).map(([key, value]) => (
-                  <option key={value} value={value}>
+                  <option key={value} value={key}>
                     {value}
                   </option>
                 ))}

@@ -1,12 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import FlightStrip from './FlightStrip';
 
 export default function ATCColumn({ title, handoffStrips, mainStrips, onDragOver, onDrop, onDelete, onStripReorder, onStripUpdate, className = '' }) {
   const [dragOverIndex, setDragOverIndex] = useState(null);
   const [dragOverArea, setDragOverArea] = useState(null);
   const [handoffSubscribed, setHandoffSubscribed] = useState(false);
+
+  // Track previous handoff strip IDs to detect new additions
+  const previousHandoffIdsRef = useRef(new Set(handoffStrips.map((s) => s.id)));
 
   // Function to play notification sound
   const playHandoffSound = () => {
@@ -63,11 +66,6 @@ export default function ATCColumn({ title, handoffStrips, mainStrips, onDragOver
     const sourceColumn = e.dataTransfer.getData('sourceColumn');
     const sourceArea = e.dataTransfer.getData('sourceArea') || 'main';
     
-    // Play sound if dropping into handoff area and user is subscribed
-    if (area === 'handoff' && handoffSubscribed) {
-      playHandoffSound();
-    }
-    
     onStripReorder(stripId, sourceColumn, sourceArea, column, area, dropIndex);
   };
 
@@ -91,6 +89,27 @@ export default function ATCColumn({ title, handoffStrips, mainStrips, onDragOver
       onStripReorder(stripId, sourceColumn, sourceArea, column, 'main', mainStrips.length);
     }
   };
+
+  // When a new strip appears in handoff area, play sound if subscribed
+  useEffect(() => {
+    const previousIds = previousHandoffIdsRef.current;
+    const currentIds = new Set(handoffStrips.map((s) => s.id));
+
+    // Detect if any new ID exists in current that wasn't in previous
+    let hasNewAddition = false;
+    for (const id of currentIds) {
+      if (!previousIds.has(id)) {
+        hasNewAddition = true;
+        break;
+      }
+    }
+
+    if (hasNewAddition && handoffSubscribed) {
+      playHandoffSound();
+    }
+
+    previousHandoffIdsRef.current = currentIds;
+  }, [handoffStrips, handoffSubscribed]);
 
   return (
     <div 

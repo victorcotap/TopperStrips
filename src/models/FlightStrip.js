@@ -9,6 +9,7 @@
  * @property {string} destination - Arrival airport or location code
  * @property {string} route - Flight route information
  * @property {number} altitude - Flight altitude in feet
+ * @property {string} [remarks] - Optional remarks
  * @property {('ground'|'tower'|'TRACON'|'C2')} column - Current ATC control position
  * @property {('main'|'handoff')} area - Area within the column (main or handoff)
  * @property {number} position - Position within the column+area for ordering (0-indexed)
@@ -28,6 +29,7 @@ export function createEmptyFlightStrip() {
     destination: '',
     route: '',
     altitude: 0,
+    remarks: '',
     column: 'ground',
     area: 'main'
   };
@@ -42,13 +44,13 @@ export function validateFlightStrip(strip) {
   const errors = [];
 
   if (!strip.callsign) errors.push('Callsign is required');
-  if (!strip.aircraftType) errors.push('Aircraft type is required');
-  if (!strip.missionType) errors.push('Mission type is required');
-  if (!strip.origin) errors.push('Origin is required');
-  if (!strip.destination) errors.push('Destination is required');
+  // aircraftType, missionType, origin, destination are optional in the form
   // Route is optional, will default to empty string if not provided
   // Altitude is optional, will default to 0 if not provided
-  if (typeof strip.numberOfAircrafts !== 'number' || strip.numberOfAircrafts < 1) {
+  if (
+    strip.numberOfAircrafts !== undefined &&
+    (typeof strip.numberOfAircrafts !== 'number' || strip.numberOfAircrafts < 1)
+  ) {
     errors.push('Number of aircrafts must be a positive number');
   }
   if (!['ground', 'tower', 'TRACON', 'C2'].includes(strip.column)) {

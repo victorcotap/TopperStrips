@@ -24,6 +24,7 @@ model FlightStrip {
   column           String   // Can be: "ground", "tower", or "TRACON"
   area             String   @default("main") // Can be: "main" or "handoff"
   position         Int      @default(0) // Position within the column+area for ordering
+  remarks          String   @default("")
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 }

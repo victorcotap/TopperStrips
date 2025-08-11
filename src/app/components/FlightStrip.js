@@ -36,6 +36,8 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
   const [routeValue, setRouteValue] = useState(strip.route);
   const [isEditingAltitude, setIsEditingAltitude] = useState(false);
   const [altitudeValue, setAltitudeValue] = useState(strip.altitude);
+  const [isEditingRemarks, setIsEditingRemarks] = useState(false);
+  const [remarksValue, setRemarksValue] = useState(strip.remarks || '');
   
   // Refs for all input fields
   const callsignInputRef = useRef(null);
@@ -94,6 +96,13 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
     }
   }, [isEditingAltitude]);
 
+  useEffect(() => {
+    if (isEditingRemarks && remarksInputRef.current) {
+      remarksInputRef.current.focus();
+      remarksInputRef.current.select();
+    }
+  }, [isEditingRemarks]);
+
   // Update field values when strip changes
   useEffect(() => {
     setCallsignValue(strip.callsign);
@@ -122,6 +131,9 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
   useEffect(() => {
     setAltitudeValue(strip.altitude);
   }, [strip.altitude]);
+  useEffect(() => {
+    setRemarksValue(strip.remarks || '');
+  }, [strip.remarks]);
 
   // Generic save function
   const saveFieldValue = async (fieldName, newValue, currentValue, setEditing) => {
@@ -282,6 +294,25 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
     }
   };
   const handleAltitudeBlur = () => handleAltitudeSave();
+
+  // Remarks handlers
+  const remarksInputRef = useRef(null);
+  const handleRemarksDoubleClick = () => setIsEditingRemarks(true);
+  const handleRemarksSave = () => saveFieldValue('remarks', remarksValue, strip.remarks || '', setIsEditingRemarks);
+  const handleRemarksCancel = () => {
+    setRemarksValue(strip.remarks || '');
+    setIsEditingRemarks(false);
+  };
+  const handleRemarksKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleRemarksSave();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      handleRemarksCancel();
+    }
+  };
+  const handleRemarksBlur = () => handleRemarksSave();
 
   return (
     <div
@@ -447,7 +478,6 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
               </span>
             )}
           </div>
-          <div className="flight-strip__empty"></div>
           <div className="flight-strip__altitude">
             {isEditingAltitude ? (
               <input
@@ -469,6 +499,28 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
                 title="Double-click to edit altitude"
               >
                 {formatAltitude(strip.altitude)}
+              </span>
+            )}
+          </div>
+          <div className="flight-strip__remarks">
+            {isEditingRemarks ? (
+              <input
+                ref={remarksInputRef}
+                type="text"
+                value={remarksValue}
+                onChange={(e) => setRemarksValue(e.target.value)}
+                onBlur={handleRemarksBlur}
+                onKeyDown={handleRemarksKeyDown}
+                className="flight-strip__field-input flight-strip__field-input--left"
+                placeholder="Remarks"
+              />
+            ) : (
+              <span
+                onDoubleClick={handleRemarksDoubleClick}
+                className="flight-strip__field-display flight-strip__field-display--left"
+                title="Double-click to edit remarks"
+              >
+                {strip.remarks || 'NO REMARKS'}
               </span>
             )}
           </div>

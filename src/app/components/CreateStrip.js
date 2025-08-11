@@ -32,6 +32,14 @@ export default function CreateStrip({ onCreateStrip }) {
       // For altitude field, default to 0 if empty or invalid
       if (e.target.name === 'altitude' && (value === '' || isNaN(Number(value)))) {
         value = 0;
+      } else if (e.target.name === 'numberOfAircrafts') {
+        // Default to 1 for empty/invalid or values less than 1
+        const parsed = Number(value);
+        if (value === '' || Number.isNaN(parsed) || parsed < 1) {
+          value = 1;
+        } else {
+          value = parsed;
+        }
       } else {
         value = Number(value);
       }
@@ -58,13 +66,12 @@ export default function CreateStrip({ onCreateStrip }) {
         />
       </div>
       <div className="form-group">
-        <label className="form-label">Aircraft Type</label>
+        <label className="form-label">Aircraft Type (Optional)</label>
         <select
           name="aircraftType"
           value={formData.aircraftType}
           onChange={handleChange}
           className="form-input"
-          required
         >
           <option value="">Select Aircraft Type</option>
           {Object.entries(AIRCRAFT_TYPES).map(([key, value]) => (
@@ -75,7 +82,7 @@ export default function CreateStrip({ onCreateStrip }) {
         </select>
       </div>
       <div className="form-group">
-        <label className="form-label">Number of Aircraft</label>
+        <label className="form-label">Number of Aircraft (Defaults to 1)</label>
         <input
           type="number"
           name="numberOfAircrafts"
@@ -84,17 +91,15 @@ export default function CreateStrip({ onCreateStrip }) {
           placeholder="1"
           className="form-input"
           min="1"
-          required
         />
       </div>
       <div className="form-group">
-        <label className="form-label">Mission Type</label>
+        <label className="form-label">Mission Type (Optional)</label>
         <select
           name="missionType"
           value={formData.missionType}
           onChange={handleChange}
           className="form-input"
-          required
         >
           <option value="">Select Mission Type</option>
           {Object.entries(MISSION_TYPES).map(([key, value]) => (
@@ -105,7 +110,7 @@ export default function CreateStrip({ onCreateStrip }) {
         </select>
       </div>
       <div className="form-group">
-        <label className="form-label">Origin</label>
+        <label className="form-label">Origin (Optional)</label>
         <input
           type="text"
           name="origin"
@@ -113,11 +118,10 @@ export default function CreateStrip({ onCreateStrip }) {
           onChange={handleChange}
           placeholder="Departure location"
           className="form-input"
-          required
         />
       </div>
       <div className="form-group">
-        <label className="form-label">Destination</label>
+        <label className="form-label">Destination (Optional)</label>
         <input
           type="text"
           name="destination"
@@ -125,7 +129,6 @@ export default function CreateStrip({ onCreateStrip }) {
           onChange={handleChange}
           placeholder="Arrival location"
           className="form-input"
-          required
         />
       </div>
       <div className="form-group">

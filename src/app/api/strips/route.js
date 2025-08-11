@@ -26,10 +26,23 @@ export async function POST(request) {
   try {
     const data = await request.json();
     
-    // Convert altitude to number, default to 0 if not provided or invalid
-    const altitude = data.altitude && !isNaN(parseInt(data.altitude, 10)) 
-      ? parseInt(data.altitude, 10) 
-      : 0;
+    // Convert altitude to feet, support both feet and 3-digit hundreds input
+    let altitudeInput = data.altitude;
+    let altitude = 0;
+    if (typeof altitudeInput === 'string') {
+      const digits = altitudeInput.replace(/\D/g, '');
+      if (digits.length <= 3) {
+        // treat as hundreds of feet
+        const hundreds = parseInt(digits || '0', 10);
+        altitude = hundreds * 100;
+      } else {
+        altitude = parseInt(altitudeInput, 10) || 0;
+      }
+    } else if (typeof altitudeInput === 'number') {
+      // Numbers are assumed to be feet already
+      altitude = altitudeInput;
+    }
+    altitude = Math.max(0, Math.min(99000, Math.round(altitude / 1000) * 1000));
 
     // Default area to 'main' if not provided
     const area = data.area || 'main';

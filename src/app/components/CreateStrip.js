@@ -30,8 +30,15 @@ export default function CreateStrip({ onCreateStrip }) {
     
     if (e.target.type === 'number') {
       // For altitude field, default to 0 if empty or invalid
-      if (e.target.name === 'altitude' && (value === '' || isNaN(Number(value)))) {
-        value = 0;
+      if (e.target.name === 'altitude') {
+        // Interpret as thousands: UI shows 3-digit thousands, store feet
+        const digits = String(value).replace(/\D/g, '');
+        if (digits === '') {
+          value = 0;
+        } else {
+          const thousands = Math.max(0, Math.min(100, parseInt(digits, 10)));
+          value = thousands * 1000;
+        }
       } else if (e.target.name === 'numberOfAircrafts') {
         // Default to 1 for empty/invalid or values less than 1
         const parsed = Number(value);
@@ -142,17 +149,7 @@ export default function CreateStrip({ onCreateStrip }) {
           className="form-input"
         />
       </div>
-      <div className="form-group">
-        <label className="form-label">Altitude (Optional)</label>
-        <input
-          type="number"
-          name="altitude"
-          value={formData.altitude}
-          onChange={handleChange}
-          placeholder="Altitude in feet"
-          className="form-input"
-        />
-      </div>
+      
       <div className="form-group">
         <label className="form-label">ATC Position</label>
         <select

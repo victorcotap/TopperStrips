@@ -35,6 +35,24 @@ export async function PATCH(request, context) {
     }
 
     // For other updates (not column moves)
+    if (Object.prototype.hasOwnProperty.call(data, 'altitude')) {
+      // Allow 3-digit hundreds input for altitude
+      let altitudeInput = data.altitude;
+      let altitude = 0;
+      if (typeof altitudeInput === 'string') {
+        const digits = altitudeInput.replace(/\D/g, '');
+        if (digits.length <= 3) {
+          const hundreds = parseInt(digits || '0', 10);
+          altitude = hundreds * 100;
+        } else {
+          altitude = parseInt(altitudeInput, 10) || 0;
+        }
+      } else if (typeof altitudeInput === 'number') {
+        altitude = altitudeInput;
+      }
+      data.altitude = Math.max(0, Math.min(99000, Math.round(altitude / 1000) * 1000));
+    }
+
     const updatedStrip = await prisma.flightStrip.update({
       where: { id },
       data: data

@@ -35,7 +35,7 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
   const [isEditingRoute, setIsEditingRoute] = useState(false);
   const [routeValue, setRouteValue] = useState(strip.route);
   const [isEditingAltitude, setIsEditingAltitude] = useState(false);
-  const [altitudeValue, setAltitudeValue] = useState(strip.altitude);
+  const [altitudeValue, setAltitudeValue] = useState(Math.round((strip.altitude || 0) / 100));
   const [isEditingRemarks, setIsEditingRemarks] = useState(false);
   const [remarksValue, setRemarksValue] = useState(strip.remarks || '');
   
@@ -129,7 +129,7 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
   }, [strip.route]);
 
   useEffect(() => {
-    setAltitudeValue(strip.altitude);
+    setAltitudeValue(Math.round((strip.altitude || 0) / 100));
   }, [strip.altitude]);
   useEffect(() => {
     setRemarksValue(strip.remarks || '');
@@ -279,7 +279,13 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
 
   // Altitude handlers
   const handleAltitudeDoubleClick = () => setIsEditingAltitude(true);
-  const handleAltitudeSave = () => saveFieldValue('altitude', altitudeValue, strip.altitude, setIsEditingAltitude);
+  const handleAltitudeSave = () => {
+    const hundreds = Number.isFinite(altitudeValue) ? altitudeValue : 0;
+    const clampedHundreds = Math.max(0, Math.min(990, Math.round(hundreds)));
+    // Store as feet, rounded to nearest 1000 to respect increment rule
+    const feet = Math.round((clampedHundreds * 100) / 1000) * 1000;
+    saveFieldValue('altitude', feet, strip.altitude, setIsEditingAltitude);
+  };
   const handleAltitudeCancel = () => {
     setAltitudeValue(strip.altitude);
     setIsEditingAltitude(false);
@@ -483,14 +489,22 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
               <input
                 ref={altitudeInputRef}
                 type="number"
-                value={altitudeValue}
-                onChange={(e) => setAltitudeValue(parseInt(e.target.value, 10) || 0)}
+                value={String(altitudeValue).padStart(3, '0')}
+                onChange={(e) => {
+                  const raw = e.target.value.replace(/\D/g, '');
+                  const parsed = parseInt(raw, 10);
+                  if (Number.isNaN(parsed)) {
+                    setAltitudeValue(0);
+                  } else {
+                    setAltitudeValue(Math.max(0, Math.min(990, parsed)));
+                  }
+                }}
                 onBlur={handleAltitudeBlur}
                 onKeyDown={handleAltitudeKeyDown}
                 className="flight-strip__field-input flight-strip__field-input--right"
                 min="0"
-                max="50000"
-                step="1000"
+                max="990"
+                step="1"
               />
             ) : (
               <span
@@ -520,7 +534,7 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
                 className="flight-strip__field-display flight-strip__field-display--left"
                 title="Double-click to edit remarks"
               >
-                {strip.remarks || 'NO REMARKS'}
+                {strip.remarks || ''}
               </span>
             )}
           </div>

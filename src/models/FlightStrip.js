@@ -46,12 +46,18 @@ export function validateFlightStrip(strip) {
   if (!strip.callsign) errors.push('Callsign is required');
   // aircraftType, missionType, origin, destination are optional in the form
   // Route is optional, will default to empty string if not provided
-  // Altitude is optional, will default to 0 if not provided
+  // Altitude is optional, will default to 0 if not provided; when provided must be in 1000-ft increments within 0–99,000
   if (
     strip.numberOfAircrafts !== undefined &&
     (typeof strip.numberOfAircrafts !== 'number' || strip.numberOfAircrafts < 1)
   ) {
     errors.push('Number of aircrafts must be a positive number');
+  }
+  if (
+    strip.altitude !== undefined &&
+    (typeof strip.altitude !== 'number' || strip.altitude < 0 || strip.altitude > 99000 || strip.altitude % 1000 !== 0)
+  ) {
+    errors.push('Altitude must be a multiple of 1000 between 000 and 990 (in hundreds)');
   }
   if (!['ground', 'tower', 'TRACON', 'C2'].includes(strip.column)) {
     errors.push('Invalid column value');
@@ -160,5 +166,8 @@ export const AIRCRAFT_TYPES = Object.freeze({
  * @returns {string} Formatted altitude string
  */
 export function formatAltitude(altitude) {
-  return `${Number(altitude).toLocaleString()}ft`;
+  const feet = Number(altitude) || 0;
+  const clampedFeet = Math.max(0, Math.min(99000, Math.round(feet / 1000) * 1000));
+  const hundreds = Math.round(clampedFeet / 100);
+  return String(hundreds).padStart(3, '0');
 }

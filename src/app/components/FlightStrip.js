@@ -26,6 +26,8 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
   const [callsignValue, setCallsignValue] = useState(strip.callsign);
   const [isEditingAircraftType, setIsEditingAircraftType] = useState(false);
   const [aircraftTypeValue, setAircraftTypeValue] = useState(strip.aircraftType);
+  const [isEditingNumberOfAircrafts, setIsEditingNumberOfAircrafts] = useState(false);
+  const [numberOfAircraftsValue, setNumberOfAircraftsValue] = useState(strip.numberOfAircrafts);
   const [isEditingOrigin, setIsEditingOrigin] = useState(false);
   const [originValue, setOriginValue] = useState(strip.origin);
   const [isEditingDestination, setIsEditingDestination] = useState(false);
@@ -42,6 +44,7 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
   // Refs for all input fields
   const callsignInputRef = useRef(null);
   const aircraftTypeInputRef = useRef(null);
+  const numberOfAircraftsInputRef = useRef(null);
   const originInputRef = useRef(null);
   const destinationInputRef = useRef(null);
   const missionTypeInputRef = useRef(null);
@@ -61,6 +64,13 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
       aircraftTypeInputRef.current.focus();
     }
   }, [isEditingAircraftType]);
+
+  useEffect(() => {
+    if (isEditingNumberOfAircrafts && numberOfAircraftsInputRef.current) {
+      numberOfAircraftsInputRef.current.focus();
+      numberOfAircraftsInputRef.current.select();
+    }
+  }, [isEditingNumberOfAircrafts]);
 
   useEffect(() => {
     if (isEditingOrigin && originInputRef.current) {
@@ -111,6 +121,10 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
   useEffect(() => {
     setAircraftTypeValue(strip.aircraftType);
   }, [strip.aircraftType]);
+
+  useEffect(() => {
+    setNumberOfAircraftsValue(strip.numberOfAircrafts);
+  }, [strip.numberOfAircrafts]);
 
   useEffect(() => {
     setOriginValue(strip.origin);
@@ -204,6 +218,31 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
     }
   };
   const handleAircraftTypeBlur = () => handleAircraftTypeSave();
+
+  // Number of Aircraft handlers
+  const handleNumberDoubleClick = (e) => {
+    e.stopPropagation();
+    setIsEditingNumberOfAircrafts(true);
+  };
+  const handleNumberSave = () => {
+    const parsed = parseInt(numberOfAircraftsValue, 10);
+    const safeValue = Number.isNaN(parsed) || parsed < 1 ? 1 : parsed;
+    saveFieldValue('numberOfAircrafts', safeValue, strip.numberOfAircrafts, setIsEditingNumberOfAircrafts);
+  };
+  const handleNumberCancel = () => {
+    setNumberOfAircraftsValue(strip.numberOfAircrafts);
+    setIsEditingNumberOfAircrafts(false);
+  };
+  const handleNumberKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleNumberSave();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      handleNumberCancel();
+    }
+  };
+  const handleNumberBlur = () => handleNumberSave();
 
   // Origin handlers
   const handleOriginDoubleClick = () => setIsEditingOrigin(true);
@@ -379,12 +418,26 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
                 ))}
               </select>
             ) : (
-              <span
-                onDoubleClick={handleAircraftTypeDoubleClick}
-                className="flight-strip__field-display"
-                title="Double-click to edit aircraft type"
-              >
-                {`${strip.numberOfAircrafts} ${strip.aircraftType}`.trim()}
+              <span className="flight-strip__field-display" title="Double-click to edit number or type">
+                {isEditingNumberOfAircrafts ? (
+                  <input
+                    ref={numberOfAircraftsInputRef}
+                    type="number"
+                    value={numberOfAircraftsValue}
+                    onChange={(e) => setNumberOfAircraftsValue(parseInt(e.target.value, 10) || 1)}
+                    onBlur={handleNumberBlur}
+                    onKeyDown={handleNumberKeyDown}
+                    className="flight-strip__field-input"
+                    min="1"
+                  />
+                ) : (
+                  <span onDoubleClick={handleNumberDoubleClick} className="flight-strip__field-display" style={{ marginRight: '0.35rem' }}>
+                    {strip.numberOfAircrafts}
+                  </span>
+                )}
+                <span onDoubleClick={handleAircraftTypeDoubleClick} className="flight-strip__field-display">
+                  {strip.aircraftType}
+                </span>
               </span>
             )}
           </div>
@@ -501,12 +554,12 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
                 onChange={(e) => setRouteValue(e.target.value)}
                 onBlur={handleRouteBlur}
                 onKeyDown={handleRouteKeyDown}
-                className="flight-strip__field-input flight-strip__field-input--left"
+                className="flight-strip__route-input"
               />
             ) : (
               <span
                 onDoubleClick={handleRouteDoubleClick}
-                className="flight-strip__field-display flight-strip__field-display--left"
+                className="flight-strip__route-display"
                 title="Double-click to edit route"
               >
                 {strip.route || 'NO ROUTE'}
@@ -529,7 +582,7 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
             ) : (
               <span
                 onDoubleClick={handleRemarksDoubleClick}
-                className="flight-strip__field-display flight-strip__field-display--left"
+                className="flight-strip__field-display flight-strip__field-display--left flight-strip__remarks-display"
                 title="Double-click to edit remarks"
               >
                 {strip.remarks || ''}

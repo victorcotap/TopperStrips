@@ -346,6 +346,13 @@
   text-align: left;
   transition: color 0.3s ease;
   text-transform: uppercase;
+  flex: 1 1 auto;
+  align-items: flex-start; /* top-align content within the tall route area */
+}
+
+/* Ensure route content is top-aligned, overriding generic child alignment */
+.flight-strip__column > .flight-strip__route {
+  align-items: flex-start;
 }
 
 .flight-strip__route-display {
@@ -356,6 +363,8 @@
   display: block;
   width: 100%;
   text-align: left;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .flight-strip__route-display:hover {
@@ -396,6 +405,11 @@
   width: 100%;
   text-align: right;
   transition: color 0.3s ease;
+}
+.flight-strip__remarks-display {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .flight-strip__altitude-display {

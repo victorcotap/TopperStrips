@@ -384,12 +384,41 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
                 className="flight-strip__field-display"
                 title="Double-click to edit aircraft type"
               >
-                {strip.aircraftType}
+                {`${strip.numberOfAircrafts} ${strip.aircraftType}`.trim()}
               </span>
             )}
           </div>
           <div className="flight-strip__count">
-            {strip.numberOfAircrafts}
+            {isEditingAltitude ? (
+              <input
+                ref={altitudeInputRef}
+                type="number"
+                value={String(altitudeValue).padStart(3, '0')}
+                onChange={(e) => {
+                  const raw = e.target.value.replace(/\D/g, '');
+                  const parsed = parseInt(raw, 10);
+                  if (Number.isNaN(parsed)) {
+                    setAltitudeValue(0);
+                  } else {
+                    setAltitudeValue(Math.max(0, Math.min(990, parsed)));
+                  }
+                }}
+                onBlur={handleAltitudeBlur}
+                onKeyDown={handleAltitudeKeyDown}
+                className="flight-strip__field-input"
+                min="0"
+                max="990"
+                step="1"
+              />
+            ) : (
+              <span
+                onDoubleClick={handleAltitudeDoubleClick}
+                className="flight-strip__field-display"
+                title="Double-click to edit altitude"
+              >
+                {formatAltitude(strip.altitude)}
+              </span>
+            )}
           </div>
         </div>
         <div className="flight-strip__column flight-strip__column--center">
@@ -484,38 +513,7 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
               </span>
             )}
           </div>
-          <div className="flight-strip__altitude">
-            {isEditingAltitude ? (
-              <input
-                ref={altitudeInputRef}
-                type="number"
-                value={String(altitudeValue).padStart(3, '0')}
-                onChange={(e) => {
-                  const raw = e.target.value.replace(/\D/g, '');
-                  const parsed = parseInt(raw, 10);
-                  if (Number.isNaN(parsed)) {
-                    setAltitudeValue(0);
-                  } else {
-                    setAltitudeValue(Math.max(0, Math.min(990, parsed)));
-                  }
-                }}
-                onBlur={handleAltitudeBlur}
-                onKeyDown={handleAltitudeKeyDown}
-                className="flight-strip__field-input flight-strip__field-input--right"
-                min="0"
-                max="990"
-                step="1"
-              />
-            ) : (
-              <span
-                onDoubleClick={handleAltitudeDoubleClick}
-                className="flight-strip__field-display flight-strip__field-display--right"
-                title="Double-click to edit altitude"
-              >
-                {formatAltitude(strip.altitude)}
-              </span>
-            )}
-          </div>
+          
           <div className="flight-strip__remarks">
             {isEditingRemarks ? (
               <input

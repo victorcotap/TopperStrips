@@ -115,6 +115,7 @@ export const AIRCRAFT_TYPES = Object.freeze({
 	A4: 'A-4',
 	HAR: 'AV-8',
 	A10: 'A-10',
+	H64: 'AH-64',
 	SB37: 'AJS37',
 	B06: 'OH-58',
 	BF19: 'Bf 109',
@@ -155,7 +156,6 @@ export const AIRCRAFT_TYPES = Object.freeze({
 	HAWK: 'T-45',
 	UH1: 'UH-1',
 	H60: 'UH-60',
-	H64: 'UH-64',
 	YK52: 'Yak-52',
   ZZZZ: 'Placeholder',
 });

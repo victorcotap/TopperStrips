@@ -17,8 +17,14 @@ export default function CreateStrip({ onCreateStrip }) {
 
     try {
       await onCreateStrip(formData);
-      // Reset form only if creation was successful
-      setFormData(createEmptyFlightStrip());
+      // Reset form only if creation was successful, but retain specific fields
+      const { missionType, origin, destination, route } = formData;
+      const reset = createEmptyFlightStrip();
+      reset.missionType = missionType;
+      reset.origin = origin;
+      reset.destination = destination;
+      reset.route = route;
+      setFormData(reset);
     } catch (error) {
       console.error('Error creating strip:', error);
       alert('Failed to create strip: ' + (error.details || error.message || 'Unknown error'));

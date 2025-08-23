@@ -89,7 +89,7 @@ export default function CreateStrip({ onCreateStrip }) {
         </select>
       </div>
       <div className="form-group">
-        <label className="form-label">Number of Aircraft (Defaults to 1)</label>
+        <label className="form-label">Number of Aircrafts</label>
         <input
           type="number"
           name="numberOfAircrafts"

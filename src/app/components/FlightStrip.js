@@ -367,6 +367,14 @@ export default function FlightStrip({ strip, onDelete, onUpdate, area }) {
         e.dataTransfer.setData('stripId', strip.id);
         e.dataTransfer.setData('sourceColumn', strip.column);
         e.dataTransfer.setData('sourceArea', area || strip.area || 'main');
+        if (typeof document !== 'undefined') {
+          document.documentElement.classList.add('is-dragging');
+        }
+      }}
+      onDragEnd={() => {
+        if (typeof document !== 'undefined') {
+          document.documentElement.classList.remove('is-dragging');
+        }
       }}
     >
       <div className="flight-strip__delete-container">

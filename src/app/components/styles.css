@@ -365,6 +365,7 @@
   text-align: left;
   white-space: normal;
   word-break: break-word;
+  min-height: 1em;
 }
 
 .flight-strip__route-display:hover {
@@ -420,6 +421,7 @@
   display: block;
   width: 100%;
   text-align: right;
+  min-height: 1em;
 }
 
 .flight-strip__altitude-display:hover {
@@ -450,6 +452,7 @@
   width: 100%;
   text-align: left;
   text-transform: uppercase;
+  min-height: 1em;
 }
 
 .flight-strip__field-display:hover {
@@ -693,4 +696,19 @@
   font-weight: 500;
   color: var(--text-secondary);
   transition: color 0.3s ease;
+}
+
+/* During drag, make all drop zones visible, larger, and highlighted */
+.is-dragging .drop-zone {
+  height: 24px;
+  margin: 8px 0;
+  background-color: var(--bg-empty-active);
+  border: 2px dashed var(--border-active);
+  opacity: 1;
+}
+
+.is-dragging .drop-zone--active {
+  height: 32px;
+  margin: 12px 0;
+  box-shadow: var(--shadow-blue-strong);
 }
